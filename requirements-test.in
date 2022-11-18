@@ -1,0 +1,26 @@
+# Built into SOAR
+beautifulsoup4
+# Production dependencies (Pulled from soar_null_router.json)
+bhr-client
+# Testing dependencies
+flake8
+mypy
+types-requests
+types-beautifulsoup4
+pytest
+vcrpy
+#⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀
+#⠀⠀⣿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⣿⠀⠀
+#⠀⠀⠛⠀⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⠀⠛⠀⠀
+#⠀⠀⣶⠾⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠷⣶⠀⠀
+#⠀⠀⣿⠀⣠⣶⣶⡶⠀⣴⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣦⠀⢶⣶⣶⣄⠀⣿⠀⠀
+#⠀⠀⣿⠀⣿⣿⡟⢠⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⡄⢻⣿⣿⠀⣿⠀⠀
+#⠀⠀⣿⠀⣿⣿⣷⡈⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⢁⣾⣿⣿⠀⣿⠀⠀
+#⠀⠀⣿⣀⣈⣉⣉⣉⣀⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣉⣀⣉⣉⣉⣁⣀⣿⠀⠀
+#⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀
+#⠀⠀⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠀⠀
+
+# TODO: Uncomment after it is available on PyPI:
+#pytest-splunk-soar-connectors
+wheel # required by the pytest-splunk-soar-connectors package
+git+ssh://git@github.com/edthedev/pytest-splunk-soar-connectors.git
