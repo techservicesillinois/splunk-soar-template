@@ -12,6 +12,8 @@ All contributions are subject to review via pull request.
 - Review the [application metadata][14] (app.json) 
   - add/remove configuration settings
   - add/remove actions
+- add `SOAR_HOSTNAME` and `SOAR_TOKEN` to GitHub secrets for deployment
+- add `WEBHOOK_URL` and `GITHUB_TOKEN` to GitHub secrets for chat reminders
 - implement `test_connectivity` in `app.py`
 
 [14]: https://docs.splunk.com/Documentation/Phantom/4.10.7/DevelopApps/Metadata
