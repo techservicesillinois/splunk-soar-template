@@ -1,0 +1,19 @@
+# This workflow tests the code in a production-like environment on our internal dev machine.
+name: CI/CD
+
+on: [push, pull_request]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Package
+      run: |
+        make build
+    - name: Post to Splunk SOAR API
+      run: |
+        make deploy
+      env:
+        SOAR_TOKEN: ${{ secrets.CICD_GITHUB_AUTOMATION }}
+        SOAR_URL: ${{ secrets.SOAR_URL }}
