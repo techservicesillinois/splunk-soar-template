@@ -36,15 +36,6 @@ eval "$(pyenv init -)"
 Note that this will not take effect unti your next login session.
 In the meantime, you can `source ~/.bash_profile`.
 
-### Configure the environment for Midpoint
-
-```sh
-export MIDPOINT_HOSTNAME=test.identity.uillinois.edu
-export MIDPOINT_PORT=
-export MIDPOINT_USERNAME=
-export MIDPOINT_PASSWORD=
-```
-
 ### Run the test suite
 
 ```sh
@@ -54,3 +45,15 @@ make venv
 source venv/bin/activate
 make test
 ```
+
+## Deployment
+
+In GitHub, under 
+`Secrets` then `Actions` add the following `Repository Secrets`:
+
+`SOAR_HOSTNAME` set to `automate-illinois.soar.splunkcloud.com`
+`SOAR_TOKEN` with your SOAR API token.
+
+### Debugging Deployment
+
+To read deploy logs, visit SOAR `Administration`, and look under `System Health` and then `Debugging`.
