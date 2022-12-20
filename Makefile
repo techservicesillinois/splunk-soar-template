@@ -56,12 +56,12 @@ requirements-test.txt: requirements-test.in
 	#REMOVE once pytest-splunk-soar-connectors is on pypi
 	sed -i "s;^pytest-splunk-soar-connectors==.*;$(PYTEST_SOAR_REPO);" $@
 
-lint: .lint
+lint: venv .lint
 .lint: $(SRCS) $(TSCS)
 	$(VENV_PYTHON) -m flake8 $?
 	touch $@
 
-static: .static
+static: venv .static
 .static: $(SRCS) $(TSCS)
 	echo "Code: $(SRCS)"
 	echo "Test: $(TSCS)"
@@ -74,6 +74,7 @@ test: venv lint static
 clean:
 	rm -rf venv $(VENV_REQS)
 	rm -rf .lint .static
+	rm -rf .mypy_cache
 	rm -f $(PACKAGE).tgz .tag
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
 	git checkout -- $(TAG_FILES)
