@@ -13,7 +13,8 @@ jobs:
         make build
     - name: Post to Splunk SOAR API
       run: |
-        make deploy
+        # make deploy
+        echo "WARNING: Uncomment the line above to start deploying."
       env:
         SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
         SOAR_URL: ${{ secrets.SOAR_URL }}
