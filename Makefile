@@ -7,8 +7,8 @@ TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
-TAG_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json app.py)
-HASH_FILES:=$(addprefix $(SRCS_DIR)/, app.py)
+VERSION_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json app.py)
+GITHUB_DEPLOYED:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 
@@ -26,14 +26,18 @@ build: $(PACKAGE).tgz
 $(PACKAGE).tgz: version $(SOAR_SRCS)
 	tar zcvf $@ -C src .
 
-version: .tag .commit
-.tag: $(TAG_FILES)
+version: .tag .commit .deployed
+.tag: $(VERSION_FILES)
 	echo version $(TAG)
 	sed -i s/GITHUB_TAG/$(TAG)/ $^
 	touch $@
-.commit: $(HASH_FILES)
+.commit: $(VERSION_FILES)
 	echo commit $(GITHUB_SHA)
 	sed -i s/GITHUB_SHA/$(GITHUB_SHA)/ $^
+	touch $@
+.deployed: $(VERSION_FILES)
+	echo deployed $(GITHUB_DEPLOYED)
+	sed -i s/GITHUB_DEPLOYED/$(GITHUB_DEPLOYED)/ $^
 	touch $@
 
 deploy: $(PACKAGE).tgz
