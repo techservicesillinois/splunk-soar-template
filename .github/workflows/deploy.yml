@@ -8,6 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Virtual Env
+      run: |
+        mkdir -p 700 $HOME/.ssh
+        echo "$DEPLOY_KEY" > $HOME/.ssh/id_rsa
+        chmod 400 $HOME/.ssh/id_rsa
+        make venv
+      env:
+        DEPLOY_KEY: ${{ secrets.PYTEST_TEMP_RO_DEPLOY_KEY }}
+    - name: Linter
+      run: |
+        make lint
+    - name: Static checks
+      run: |
+        make static 
+    # - name: Tests
+    #  run: |
+    #    make test
     - name: Build Package
       run: |
         make build
