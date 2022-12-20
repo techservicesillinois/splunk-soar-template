@@ -1,6 +1,6 @@
 .PHONY: all build clean lint static
-MODULE:=Illinois_midPoint
-PACKAGE:=illinoismidpoint
+MODULE:=illinois_app
+PACKAGE:=app
 
 SRCS_DIR:=src/ph$(MODULE)
 TSCS_DIR:=tests
