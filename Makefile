@@ -1,14 +1,14 @@
 .PHONY: all build clean lint static
-MODULE:=Illinois_midPoint
-PACKAGE:=illinoismidpoint
+MODULE:=illinois_app
+PACKAGE:=app
 
 SRCS_DIR:=src/ph$(MODULE)
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
-TAG_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json app.py)
-HASH_FILES:=$(addprefix $(SRCS_DIR)/, app.py)
+VERSIONED_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json app.py)
+BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 
@@ -26,14 +26,18 @@ build: $(PACKAGE).tgz
 $(PACKAGE).tgz: version $(SOAR_SRCS)
 	tar zcvf $@ -C src .
 
-version: .tag .commit
-.tag: $(TAG_FILES)
+version: .tag .commit .deployed
+.tag: $(VERSIONED_FILES)
 	echo version $(TAG)
 	sed -i s/GITHUB_TAG/$(TAG)/ $^
 	touch $@
-.commit: $(HASH_FILES)
+.commit: $(VERSIONED_FILES)
 	echo commit $(GITHUB_SHA)
 	sed -i s/GITHUB_SHA/$(GITHUB_SHA)/ $^
+	touch $@
+.deployed: $(VERSIONED_FILES)
+	echo deployed $(BUILD_TIME)
+	sed -i s/BUILD_TIME/$(BUILD_TIME)/ $^
 	touch $@
 
 deploy: $(PACKAGE).tgz

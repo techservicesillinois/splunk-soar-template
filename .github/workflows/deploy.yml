@@ -13,7 +13,8 @@ jobs:
         make build
     - name: Post to Splunk SOAR API
       run: |
-        make deploy
+        # TODO: (#8) Re-enable deployment - waiting on SOAR API key
+        # make deploy
       env:
         SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
         SOAR_URL: ${{ secrets.SOAR_URL }}
