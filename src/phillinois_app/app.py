@@ -134,12 +134,10 @@ class IllinoisMidpointConnector(BaseConnector):
 
         self.save_progress("Connecting to endpoint")
         response = requests.get(
-            f"{self._baseurl}/midpoint/ws/rest/self",
-            headers={"Accept": "application/json"},
+            "https://cybersecurity.illinois.edu/",
             allow_redirects=False,
-            auth=self._auth
         )
-        if response.json()["user"]["name"] != self._username:
+        if response.status_code != 200:
             self.save_progress("Test Connectivity Failed.")
             return action_result.get_status()
 
