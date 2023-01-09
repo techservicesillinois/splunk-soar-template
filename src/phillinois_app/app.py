@@ -19,7 +19,7 @@ from xml.dom import minidom
 
 __version__ = 'GITHUB_TAG'
 __git_hash__ = 'GITHUB_SHA'
-__deployed__ = 'GITHUB_DEPLOYED'
+__build_time__ = 'BUILD_TIME'
 
 
 class RetVal(tuple):

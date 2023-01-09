@@ -12,7 +12,7 @@
     "publisher": "Cybersecurity",
     "license": "Copyright (c) Cybersecurity, 2022",
     "app_version": "GITHUB_TAG",
-    "utctime_updated": "GITHUB_DEPLOYED",
+    "utctime_updated": "BUILD_TIME",
     "package_name": "phIllinois_app",
     "main_module": "app.py",
     "min_phantom_version": "5.3.3.92213",
