@@ -28,7 +28,7 @@ class RetVal(tuple):
         return tuple.__new__(RetVal, (val1, val2))
 
 
-class IllinoisMidpointConnector(BaseConnector):
+class AppConnector(BaseConnector):
 
     def __init__(self):
 
