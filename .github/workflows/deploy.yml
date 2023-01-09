@@ -22,9 +22,9 @@ jobs:
     - name: Static checks
       run: |
         make static 
-    # - name: Tests
-    #  run: |
-    #    make test
+    - name: Tests
+      run: |
+        make test
     - name: Build Package
       run: |
         make build

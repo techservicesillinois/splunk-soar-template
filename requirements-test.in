@@ -5,8 +5,9 @@ bhr-client
 # Testing dependencies
 flake8
 mypy
-types-requests
 types-beautifulsoup4
+types-jwt
+types-requests
 pytest
 vcrpy
 #⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀
