@@ -1,3 +1,16 @@
+# SOAR
+*.ini
+*.tgz
+*.vscode
+
+# Our Makefile
+.commit
+.deploy
+.lint
+.requirements.venv
+.static
+.tag
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -130,10 +143,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# SOAR
-*.ini
-*.tgz
-*.vscode
-.requirements.venv
-.lint
