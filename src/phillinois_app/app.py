@@ -8,9 +8,10 @@
 from __future__ import print_function, unicode_literals
 
 # Phantom App imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
+from phantom_mock import phantom
+from phantom_mock.phantom.base_connector import BaseConnector
+from phantom_mock.phantom.action_result import ActionResult
+
 
 import requests
 import json
@@ -28,12 +29,12 @@ class RetVal(tuple):
         return tuple.__new__(RetVal, (val1, val2))
 
 
-class IllinoisMidpointConnector(BaseConnector):
+class AppConnector(BaseConnector):
 
     def __init__(self):
 
         # Call the BaseConnectors init first
-        super(IllinoisMidpointConnector, self).__init__()
+        super(BaseConnector, self).__init__()
 
         self._state = None
 
@@ -134,12 +135,10 @@ class IllinoisMidpointConnector(BaseConnector):
 
         self.save_progress("Connecting to endpoint")
         response = requests.get(
-            f"{self._baseurl}/midpoint/ws/rest/self",
-            headers={"Accept": "application/json"},
+            "https://cybersecurity.illinois.edu/",
             allow_redirects=False,
-            auth=self._auth
         )
-        if response.json()["user"]["name"] != self._username:
+        if response.status_code != 200:
             self.save_progress("Test Connectivity Failed.")
             return action_result.get_status()
 
@@ -282,7 +281,7 @@ def main():
     if username and password:
         try:
             login_url = \
-                IllinoisMidpointConnector._get_phantom_base_url() + '/login'
+                AppConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=False)
@@ -310,7 +309,7 @@ def main():
         in_json = json.loads(in_json)
         print(json.dumps(in_json, indent=4))
 
-        connector = IllinoisMidpointConnector()
+        connector = AppConnector()
         connector.print_progress_message = True
 
         if session_id is not None:
