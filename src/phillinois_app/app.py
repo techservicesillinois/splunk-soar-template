@@ -33,7 +33,7 @@ class AppConnector(BaseConnector):
     def __init__(self):
 
         # Call the BaseConnectors init first
-        super(IllinoisMidpointConnector, self).__init__()
+        super(BaseConnector, self).__init__()
 
         self._state = None
 
@@ -280,7 +280,7 @@ def main():
     if username and password:
         try:
             login_url = \
-                IllinoisMidpointConnector._get_phantom_base_url() + '/login'
+                AppConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=False)
@@ -308,7 +308,7 @@ def main():
         in_json = json.loads(in_json)
         print(json.dumps(in_json, indent=4))
 
-        connector = IllinoisMidpointConnector()
+        connector = AppConnector()
         connector.print_progress_message = True
 
         if session_id is not None:

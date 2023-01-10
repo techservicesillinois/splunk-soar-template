@@ -28,9 +28,6 @@ class CleanYAMLSerializer:
     def serialize(cassette: dict):
         for interaction in cassette['interactions']:
             clean_jwt_token(interaction)
-            clean_search(interaction)
-            clean_new_ticket(interaction)
-            clean_people_lookup(interaction)
         return yamlserializer.serialize(cassette)
 
     def deserialize(cassette: str):
@@ -61,16 +58,16 @@ def connector(monkeypatch) -> AppConnector:
             "endpoint": CASSETTE_ENDPOINT,
         }
     else:  # User environment values
-        env_keys = ['username','password','netid',
-                    'endpoint']
+        env_keys = ['username', 'password',
+                    'netid', 'endpoint']
 
         for key in env_keys:
             # TODO: Change APP_ on next line to avoid key conflicts
-            env_key = f"APP_{key.upper()}"  
+            env_key = f"APP_{key.upper()}"
             conn.config[key] = os.environ.get(env_key, None)
             if not conn.config[key]:
                 raise ValueError(f'{env_key} unset or empty with record mode')
-        
+
     conn.logger.setLevel(logging.INFO)
     return conn
 

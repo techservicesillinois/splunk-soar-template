@@ -1,20 +1,13 @@
 import json
-import os
-import sys
 from urllib.error import HTTPError
 
-import pytest
-import vcr
+from vcr import cassette
 
-from unittest.mock import patch, Mock
 from requests.exceptions import HTTPError
 
 from phTDX.tdx_connector import TdxConnector
 
-from conftest import VCR_RECORD, CASSETTE_NETID
-
 APP_ID = "tacosalad"
-TICKET_ID = 564073  # Must match cassette
 
 def test_connectivity(cassette, connector: TdxConnector):
     in_json = {
