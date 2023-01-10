@@ -1,7 +1,3 @@
-import datetime
-import gzip
-import json
-import jwt
 import logging
 import os
 
@@ -28,26 +24,14 @@ class CleanYAMLSerializer:
     @staticmethod
     def serialize(cassette: dict):
         for interaction in cassette['interactions']:
-            clean_jwt_token(interaction)
+            pass
+            # TODO: Add your cleaner functions here.
+            # TODO: Add a link to our cleaner function repo here.
         return yamlserializer.serialize(cassette)
 
     @staticmethod
     def deserialize(cassette: str):
         return yamlserializer.deserialize(cassette)
-
-
-def clean_jwt_token(interaction: dict):
-    uri = f"{URL}/api/auth"  # TODO: Adjust URI to match auth URL in use.
-    if interaction['request']['uri'] != uri:
-        return
-
-    token = jwt.encode(
-        {'exp': datetime.datetime(2049, 6, 25)}, 'arenofun', algorithm='HS256')
-    response = interaction['response']
-    if 'Content-Encoding' in response['headers'].keys() and \
-            response['headers']['Content-Encoding'] == ['gzip']:
-        token = gzip.compress(bytes(token, "ascii"))
-    response['body']['string'] = token
 
 
 @pytest.fixture
@@ -74,26 +58,13 @@ def connector(monkeypatch) -> AppConnector:
     return conn
 
 
-def remove_creds(request):
-    if not request.body:
-        return request
-    data = json.loads(request.body.decode('utf-8'))
-
-    if 'password' in data:
-        data['password'] = CASSETTE_PASSWORD
-    if 'username' in data:
-        data['username'] = CASSETTE_USERNAME
-
-    request.body = json.dumps(data)
-    return request
-
-
 @pytest.fixture
 def cassette(request) -> vcr.cassette.Cassette:
     my_vcr = vcr.VCR(
         cassette_library_dir='cassettes',
         record_mode='once' if VCR_RECORD else 'none',
-        before_record_request=remove_creds,
+        # TODO: Uncomment with remove_creds from shared repo
+        # before_record_request=remove_creds,
         filter_headers=[('Authorization', 'Bearer FAKE_TOKEN')],
         match_on=['uri', 'method'],
     )
