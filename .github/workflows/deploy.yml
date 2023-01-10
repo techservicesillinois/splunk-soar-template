@@ -23,7 +23,7 @@ jobs:
       run: |
         make static 
     - name: Tests
-     run: |
+      run: |
        make test
     - name: Build Package
       run: |
