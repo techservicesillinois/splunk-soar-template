@@ -8,7 +8,7 @@ import os
 import pytest
 import vcr
 
-from phillinois_app import AppConnector
+from phillinois_app.app import AppConnector
 from vcr.serializers import yamlserializer
 
 # Required pytest plugins
