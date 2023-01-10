@@ -57,3 +57,12 @@ In GitHub, under
 ### Debugging Deployment
 
 To read deploy logs, visit SOAR `Administration`, and look under `System Health` and then `Debugging`.
+
+>Tip: As of Jan 2023, An read-only SSH deploy private key 
+>in Repository Secret `PYTEST_TEMP_RO_DEPLOY_KEY`
+>allows us to clone a private fork of
+>`pytest-splunk-soar-connectors` using git ssh.
+> The public half of the key is added to `pytest-splunk-soar-connectors` as a read-only deploy key.
+>This can be retired when
+>`pytest-splunk-soar-connectors` is made public.
+> The key pair was was generated with `ssh-keygen`.
