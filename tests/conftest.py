@@ -25,11 +25,13 @@ VCR_RECORD = "VCR_RECORD" in os.environ
 
 
 class CleanYAMLSerializer:
+    @staticmethod
     def serialize(cassette: dict):
         for interaction in cassette['interactions']:
             clean_jwt_token(interaction)
         return yamlserializer.serialize(cassette)
 
+    @staticmethod
     def deserialize(cassette: str):
         return yamlserializer.deserialize(cassette)
 
