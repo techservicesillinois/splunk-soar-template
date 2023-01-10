@@ -1,4 +1,3 @@
-import logging
 import os
 
 import pytest
@@ -54,7 +53,6 @@ def connector(monkeypatch) -> AppConnector:
             if not conn.config[key]:
                 raise ValueError(f'{env_key} unset or empty with record mode')
 
-    conn.logger.setLevel(logging.INFO)
     return conn
 
 
