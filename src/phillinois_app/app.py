@@ -28,12 +28,12 @@ class RetVal(tuple):
         return tuple.__new__(RetVal, (val1, val2))
 
 
-class IllinoisMidpointConnector(BaseConnector):
+class AppConnector(BaseConnector):
 
     def __init__(self):
 
         # Call the BaseConnectors init first
-        super(IllinoisMidpointConnector, self).__init__()
+        super(AppConnector, self).__init__()
 
         self._state = None
 
@@ -134,14 +134,13 @@ class IllinoisMidpointConnector(BaseConnector):
 
         self.save_progress("Connecting to endpoint")
         response = requests.get(
-            f"{self._baseurl}/midpoint/ws/rest/self",
-            headers={"Accept": "application/json"},
-            allow_redirects=False,
-            auth=self._auth
+            self._baseurl,
+            allow_redirects=True,
         )
-        if response.json()["user"]["name"] != self._username:
+        if response.status_code != 200:
             self.save_progress("Test Connectivity Failed.")
-            return action_result.get_status()
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "Failed connection")
 
         # Return success
         self.save_progress(
@@ -245,10 +244,9 @@ class IllinoisMidpointConnector(BaseConnector):
         optional_config_name = config.get('optional_config_name')
         """
 
-        self._hostname = config['hostname']
-        self._port = config['port']
+        self._endpoint = config['endpoint']
         self._auth = (config['username'], config['password'])
-        self._baseurl = f"https://{self._hostname}:{self._port}"
+        self._baseurl = f"https://{self._endpoint}"
         self._username = config['username']
         return phantom.APP_SUCCESS
 
@@ -282,7 +280,7 @@ def main():
     if username and password:
         try:
             login_url = \
-                IllinoisMidpointConnector._get_phantom_base_url() + '/login'
+                AppConnector._get_phantom_base_url() + '/login'
 
             print("Accessing the Login page")
             r = requests.get(login_url, verify=False)
@@ -310,7 +308,7 @@ def main():
         in_json = json.loads(in_json)
         print(json.dumps(in_json, indent=4))
 
-        connector = IllinoisMidpointConnector()
+        connector = AppConnector()
         connector.print_progress_message = True
 
         if session_id is not None:

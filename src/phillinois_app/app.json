@@ -10,7 +10,7 @@
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Cybersecurity",
-    "license": "Copyright (c) Cybersecurity, 2022",
+    "license": "Copyright (c) Cybersecurity, 2023",
     "app_version": "GITHUB_TAG",
     "utctime_updated": "BUILD_TIME",
     "package_name": "phIllinois_app",
@@ -18,21 +18,13 @@
     "min_phantom_version": "5.3.3.92213",
     "app_wizard_version": "1.0.0",
     "configuration": {
-        "hostname": {
-            "description": "hostname",
+        "endpoint": {
+            "description": "Endpoint",
             "data_type": "string",
             "required": true,
             "order": 0,
-            "name": "hostname",
+            "name": "endpoint",
             "id": 0
-        },
-        "port": {
-            "description": "port",
-            "data_type": "numeric",
-            "required": true,
-            "order": 1,
-            "name": "port",
-            "id": 1
         },
         "username": {
             "description": "Username",
