@@ -148,69 +148,6 @@ class AppConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS,
                                         "Active connection")
 
-    def _handle_scramble_user(self, param):
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        url = (f"{self._baseurl}/midpoint/model/rest/uofi/extended/users"
-               f"/{param['uin']}/{param['netid']}/scramblePassword")
-        headers = {
-            "Content-Type": "application/xml",
-            "user-agent": "SOAR"
-        }
-        xml = """<objectModification
-                xmlns='http://midpoint.evolveum.com/xml/ns/public/common/api-types-3'
-                xmlns:c='http://midpoint.evolveum.com/xml/ns/public/common/common-3'
-                xmlns:t='http://prism.evolveum.com/xml/ns/public/types-3' />"""
-        response = requests.patch(url, data=xml, headers=headers,
-                                  allow_redirects=False, auth=self._auth)
-
-        status = response.status_code
-        reason = response.reason
-        if status != 200:
-            self.save_progress(f"User scramble failed:{status}:{reason}")
-            return action_result.get_status()
-
-        # Note: We have seen cases where the API does not return error messages
-        # in cases we would expect to fail:
-        #
-        #   * If you swap UIN and NetID when passing those values in the URL
-        #   * If you give a non-exisitent UIN and/or NetID
-        #
-        # There have been point-release updates since we saw this behavior.
-
-        xmlDoc = minidom.parseString(response.content)
-        userResetNodeList = xmlDoc.getElementsByTagNameNS(
-            '*', "modifyTimestamp")
-        userEmailNodeList = xmlDoc.getElementsByTagNameNS(
-            '*', "selfserviceemail")
-
-        userReset = None
-        try:
-            userReset = userResetNodeList[0].firstChild.nodeValue
-        except IndexError:
-            self.save_progress(
-                f"No info returned from Midpoint for user {param['netid']}")
-        except Exception:
-            self.save_progress(
-                f"Incomplete info from Midpoint for user {param['netid']}")
-
-        try:
-            self_service_email = userEmailNodeList[0].firstChild.nodeValue
-            action_result.update_data(
-                [{'self_service_email': self_service_email}])
-        except IndexError:
-            self.save_progress(
-                "No self service email returned from Midpoint "
-                f"for user {param['netid']}")
-
-        if userReset:
-            return action_result.set_status(
-                phantom.APP_SUCCESS,
-                f"User {param['netid']} scrambled {userReset}")
-        else:
-            return action_result.set_status(
-                phantom.APP_SUCCESS,
-                f"User {param['netid']} scrambled or invalid")
 
     def handle_action(self, param):
         ret_val = phantom.APP_SUCCESS
@@ -222,8 +159,7 @@ class AppConnector(BaseConnector):
 
         if action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param)
-        elif action_id == 'scramble_user':
-            ret_val = self._handle_scramble_user(param)
+        # TODO: Add additional block handlers here
 
         return ret_val
 
