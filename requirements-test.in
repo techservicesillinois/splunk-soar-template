@@ -25,3 +25,4 @@ vcrpy
 #pytest-splunk-soar-connectors
 wheel # required by the pytest-splunk-soar-connectors package
 git+ssh://git@github.com/edthedev/pytest-splunk-soar-connectors.git
+git+https://github.com/techservicesillinois/vcrpy-cleaner.git

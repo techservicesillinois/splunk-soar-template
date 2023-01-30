@@ -5,7 +5,7 @@ import pytest
 import vcr
 
 from phillinois_app.app import AppConnector
-from vcr.serializers import yamlserializer
+from vcr_cleaner import CleanYAMLSerializer
 
 # Required pytest plugins
 pytest_plugins = ("splunk-soar-connectors")
@@ -16,20 +16,6 @@ CASSETTE_ENDPOINT = "cybersecurity.illinois.edu/robots.txt"
 
 # To record, `export VCR_RECORD=True`
 VCR_RECORD = "VCR_RECORD" in os.environ
-
-
-class CleanYAMLSerializer:
-    @staticmethod
-    def serialize(cassette: dict):
-        for interaction in cassette['interactions']:
-            pass
-            # TODO: Add your cleaner functions here.
-            # TODO: Add a link to our cleaner function repo here.
-        return yamlserializer.serialize(cassette)
-
-    @staticmethod
-    def deserialize(cassette: str):
-        return yamlserializer.deserialize(cassette)
 
 
 @pytest.fixture
@@ -64,7 +50,13 @@ def cassette(request) -> vcr.cassette.Cassette:
         filter_headers=[('Authorization', 'Bearer FAKE_TOKEN')],
         match_on=['uri', 'method'],
     )
-    my_vcr.register_serializer("cleanyaml", CleanYAMLSerializer)
+
+    # TODO: Remove this block if not using cleaners
+    # (see https://github.com/techservicesillinois/vcrpy-cleaner):
+    yaml_cleaner = CleanYAMLSerializer()
+    my_vcr.register_serializer("cleanyaml", yaml_cleaner)
+    # TODO: Register cleaner functions here:
+    # yaml_cleaner.register_cleaner(clean_bad_word)
 
     with my_vcr.use_cassette(f'{request.function.__name__}.yaml',
                              serializer="cleanyaml") as tape:
