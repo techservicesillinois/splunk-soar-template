@@ -25,7 +25,7 @@ git+ssh://git@github.com/edthedev/pytest-splunk-soar-connectors.git
 python-dateutil==2.8.2
 PyYAML==6.0
 requests==2.28.2
-rich==13.2.0
+rich==13.3.1
 six==1.16.0
 soupsieve==2.3.2.post1
 tomli==2.0.1
@@ -37,7 +37,7 @@ types-requests==2.28.11.8
 types-urllib3==1.26.25.4
 typing_extensions==4.4.0
 urllib3==1.26.14
-vcr-cleaner @ git+https://github.com/techservicesillinois/vcrpy-cleaner.git@6853b7a0a52b30e2b3b9602f62db8fa934898f7e
+vcr-cleaner @ git+https://github.com/techservicesillinois/vcrpy-cleaner.git@f9248b34665cddcbba3301c6fce1b25f17e0f595
 vcrpy==4.2.1
 wrapt==1.14.1
 yarl==1.8.2
