@@ -15,7 +15,6 @@ from phantom.action_result import ActionResult
 import requests
 import json
 from bs4 import BeautifulSoup
-from xml.dom import minidom
 
 __version__ = 'GITHUB_TAG'
 __git_hash__ = 'GITHUB_SHA'
@@ -147,7 +146,6 @@ class AppConnector(BaseConnector):
             f"Test Connectivity Passed: {__version__} ({__git_hash__[0:7]})")
         return action_result.set_status(phantom.APP_SUCCESS,
                                         "Active connection")
-
 
     def handle_action(self, param):
         ret_val = phantom.APP_SUCCESS
