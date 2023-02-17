@@ -33,4 +33,4 @@ jobs:
         make deploy
       env:
         SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
-        SOAR_URL: ${{ secrets.SOAR_URL }}
+        SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
