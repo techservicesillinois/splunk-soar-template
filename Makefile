@@ -1,7 +1,10 @@
-.PHONY: all build clean lint static
-MODULE:=illinois_app
-PACKAGE:=app
+# DO NOT EDIT
+# All project-specific values belong in config.mk!
 
+.PHONY: all build clean lint static
+include config.mk
+
+PACKAGE:=app
 SRCS_DIR:=src/ph$(MODULE)
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
@@ -21,7 +24,13 @@ GITHUB_SHA?=$(shell git rev-parse HEAD)
 
 all: build
 
-build: $(PACKAGE).tgz
+build: export APP_ID=$(PROD_APP_ID)
+build: export APP_NAME=$(PROD_APP_NAME)
+build: .appjson $(PACKAGE).tgz
+
+build-test: export APP_ID=$(TEST_APP_ID)
+build-test: export APP_NAME=$(TEST_APP_NAME)
+build-test: .appjson $(PACKAGE).tgz
 
 $(PACKAGE).tgz: version $(SOAR_SRCS)
 	tar zcvf $@ -C src .
@@ -29,15 +38,21 @@ $(PACKAGE).tgz: version $(SOAR_SRCS)
 version: .tag .commit .deployed
 .tag: $(VERSIONED_FILES)
 	echo version $(TAG)
-	sed -i s/GITHUB_TAG/$(TAG)/ $^
+	sed -i "s/GITHUB_TAG/$(TAG)/" $^
 	touch $@
 .commit: $(VERSIONED_FILES)
 	echo commit $(GITHUB_SHA)
-	sed -i s/GITHUB_SHA/$(GITHUB_SHA)/ $^
+	sed -i "s/GITHUB_SHA/$(GITHUB_SHA)/" $^
 	touch $@
 .deployed: $(VERSIONED_FILES)
 	echo deployed $(BUILD_TIME)
-	sed -i s/BUILD_TIME/$(BUILD_TIME)/ $^
+	sed -i "s/BUILD_TIME/$(BUILD_TIME)/" $^
+	touch $@
+.appjson: $(SRCS_DIR)/$(PACKAGE).json
+	echo appid: $(APP_ID)
+	echo name:  $(APP_NAME)
+	sed -i "s/APP_ID/$(APP_ID)/" $^
+	sed -i "s/APP_NAME/$(APP_NAME)/" $^
 	touch $@
 
 deploy: $(PACKAGE).tgz

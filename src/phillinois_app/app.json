@@ -1,16 +1,16 @@
 {
-    "appid": "d65b6a0c-e423-40a5-b74d-c024e7397104",
-    "name": "TestBox",
+    "appid": "APP_ID",
+    "name": "APP_NAME",
     "description": "Illinois Test Template app",
     "type": "Cybersecurity incident response",
-    "product_vendor": "Tech Services Illinois",
     "logo": "logo.png",
     "logo_dark": "logo.png",
-    "product_name": "TestBox",
+    "product_vendor": "TODO - Add upstream product vendor",
+    "product_name": "TODO - Add upstream product name",
     "python_version": "3",
     "product_version_regex": ".*",
-    "publisher": "Cybersecurity",
-    "license": "Copyright (c) Cybersecurity, 2023",
+    "publisher": "University of Illinois Technology Services Cybersecurity",
+    "license": "NCSA",
     "app_version": "GITHUB_TAG",
     "utctime_updated": "BUILD_TIME",
     "package_name": "phIllinois_app",
@@ -66,5 +66,6 @@
             "output": [],
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "disabled": true
 }
