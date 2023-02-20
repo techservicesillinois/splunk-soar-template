@@ -155,7 +155,7 @@ class AppConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
+        if action_id in ['test_connectivity', 'test_robots_txt']:
             ret_val = self._handle_test_connectivity(param)
         # TODO: Add additional block handlers here
 
