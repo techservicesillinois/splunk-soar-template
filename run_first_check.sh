@@ -14,6 +14,7 @@ VALUES=(
     "Test Box"
     TODO
 )
+
 for i in ${!VALUES[@]}; do 
     if git grep "${VALUES[$i]}" -- :^first_run_check.sh
     then
@@ -21,5 +22,8 @@ for i in ${!VALUES[@]}; do
     fi
 done
 
+if [ -f ".github/workflows/run_first_check.yml" ]; then
+    echo Remove run_first_check.yml
+fi
 echo Remove run_first_check.sh
 exit 1
