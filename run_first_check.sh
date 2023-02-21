@@ -21,5 +21,5 @@ for i in ${!VALUES[@]}; do
     fi
 done
 
-echo Remove first_run_check.sh
+echo Remove run_first_check.sh
 exit 1
