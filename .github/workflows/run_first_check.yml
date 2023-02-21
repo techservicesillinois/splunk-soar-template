@@ -5,7 +5,7 @@ on: [push, pull_request]
 
 jobs:
   run_first_check:
-    if: github.repository == 'techservicesillinois/splunk-soar-template'
+    if: github.repository != 'techservicesillinois/splunk-soar-template'
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
