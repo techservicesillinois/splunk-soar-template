@@ -1,0 +1,12 @@
+name: Template Repository Child Test
+
+on: [push, pull_request]
+
+jobs:
+  run_first_check:
+    if: github.repository != 'techservicesillinois/splunk-soar-template'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Ensure template values have been updated
+      run: ./run_first_check.sh 
