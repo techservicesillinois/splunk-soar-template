@@ -33,6 +33,7 @@ build-test: export APP_NAME=$(TEST_APP_NAME)
 build-test: .appjson $(PACKAGE).tgz
 
 $(PACKAGE).tgz: version $(SOAR_SRCS)
+	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
 	tar zcvf $@ -C src .
 
 version: .tag .commit .deployed
