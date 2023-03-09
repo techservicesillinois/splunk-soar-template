@@ -34,7 +34,7 @@ build-test: .appjson $(PACKAGE).tar
 
 $(PACKAGE).tar: version $(SOAR_SRCS)
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	tar cvf $@ -C src .
+	tar cvf $@ -C src phillinois_app
 
 version: .tag .commit .deployed
 .tag: $(VERSIONED_FILES)
