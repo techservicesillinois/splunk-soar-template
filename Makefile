@@ -5,7 +5,7 @@
 include config.mk
 
 PACKAGE:=app
-SRCS_DIR:=src/ph$(MODULE)
+SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
@@ -26,15 +26,15 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: .appjson $(PACKAGE).tgz
+build: .appjson $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: .appjson $(PACKAGE).tgz
+build-test: .appjson $(PACKAGE).tar
 
-$(PACKAGE).tgz: version $(SOAR_SRCS)
+$(PACKAGE).tar: version $(SOAR_SRCS)
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	tar zcvf $@ -C src .
+	tar cvf $@ -C src $(MODULE)
 
 version: .tag .commit .deployed
 .tag: $(VERSIONED_FILES)
@@ -54,9 +54,10 @@ version: .tag .commit .deployed
 	echo name:  $(APP_NAME)
 	sed -i "s/APP_ID/$(APP_ID)/" $^
 	sed -i "s/APP_NAME/$(APP_NAME)/" $^
+	sed -i "s/MODULE/$(MODULE)/" $^
 	touch $@
 
-deploy: $(PACKAGE).tgz
+deploy: $(PACKAGE).tar
 	python deploy.py $^
 
 venv: requirements-test.txt
@@ -91,7 +92,7 @@ clean:
 	rm -rf venv $(VENV_REQS)
 	rm -rf .lint .static
 	rm -rf .mypy_cache
-	rm -f $(PACKAGE).tgz .tag
+	rm -f $(PACKAGE).tar .tag
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
 	git checkout -- $(TAG_FILES)
 
