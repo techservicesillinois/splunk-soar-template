@@ -1,5 +1,6 @@
 # SOAR
 *.ini
+*.tar
 *.tgz
 *.vscode
 
