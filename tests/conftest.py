@@ -4,7 +4,7 @@ import os
 import pytest
 import vcr
 
-from phillinois_app.app import AppConnector
+from app.app import AppConnector
 from vcr_cleaner import CleanYAMLSerializer
 
 # Required pytest plugins
