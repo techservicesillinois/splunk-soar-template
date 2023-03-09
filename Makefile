@@ -5,7 +5,7 @@
 include config.mk
 
 PACKAGE:=app
-SRCS_DIR:=src/ph$(MODULE)
+SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
@@ -34,7 +34,7 @@ build-test: .appjson $(PACKAGE).tar
 
 $(PACKAGE).tar: version $(SOAR_SRCS)
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	tar cvf $@ -C src phillinois_app
+	tar cvf $@ -C src $(MODULE)
 
 version: .tag .commit .deployed
 .tag: $(VERSIONED_FILES)
@@ -54,6 +54,7 @@ version: .tag .commit .deployed
 	echo name:  $(APP_NAME)
 	sed -i "s/APP_ID/$(APP_ID)/" $^
 	sed -i "s/APP_NAME/$(APP_NAME)/" $^
+	sed -i "s/MODULE/$(MODULE)/" $^
 	touch $@
 
 deploy: $(PACKAGE).tar
