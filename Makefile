@@ -61,10 +61,11 @@ deploy: $(PACKAGE).tar
 	python deploy.py $^
 
 venv: requirements-test.txt
+	rm -rf $@
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $^
 
-requirements-test.txt: export PYTEST_SOAR_REPO=git+ssh://git@github.com/edthedev/pytest-splunk-soar-connectors.git
+requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
 	rm -rf $(VENV_REQS)
 	python -m venv $(VENV_REQS)
