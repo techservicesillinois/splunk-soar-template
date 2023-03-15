@@ -2,14 +2,21 @@
 # Nice and dry Phantom App
 # -----------------------------------------
 # TODO: This SHOULD be split into its own repo and imported
+import inspect
 
 # Phantom App imports
 import phantom.app as phantom
 from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
 
-import requests
 from bs4 import BeautifulSoup
+
+
+def handle(*action_ids):
+    """Registor function to handle given action_ids."""
+    def decorator(func):
+        func._handle = action_ids
+        return func
+    return decorator
 
 
 class RetVal(tuple):
@@ -21,9 +28,14 @@ class RetVal(tuple):
 class NiceBaseConnector(BaseConnector):
 
     def __init__(self):
-
         # Call the BaseConnectors init first
         super(NiceBaseConnector, self).__init__()
+
+        self.actions = {}
+        for _, method in inspect.getmembers(self):
+            if hasattr(method, '_handle'):
+                for action_id in getattr(method, '_handle'):
+                    self.actions[action_id] = method
 
         self._state = None
 
@@ -119,37 +131,15 @@ class NiceBaseConnector(BaseConnector):
         return RetVal(action_result.set_status(
             phantom.APP_ERROR, message), None)
 
-    def _handle_test_connectivity(self, param):
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        self.save_progress("Connecting to endpoint")
-        response = requests.get(
-            self._baseurl,
-            allow_redirects=True,
-        )
-        if response.status_code != 200:
-            self.save_progress("Test Connectivity Failed.")
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "Failed connection")
-
-        # Return success
-        self.save_progress("Test Connectivity Passed")
-        return action_result.set_status(phantom.APP_SUCCESS,
-                                        "Active connection")
-
     def handle_action(self, param):
-        ret_val = phantom.APP_SUCCESS
-
-        # Get the action that we are supposed to execute for this App Run
         action_id = self.get_action_identifier()
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id in ['test_connectivity', 'test_robots_txt']:
-            ret_val = self._handle_test_connectivity(param)
-        # TODO: Add additional block handlers here
+        if action_id in self.actions.keys():
+            return self.actions[action_id](param)
 
-        return ret_val
+        return phantom.APP_SUCCESS  # TODO: Should this be an error instead?
 
     def initialize(self):
         # Load the state in initialize, use it to store data

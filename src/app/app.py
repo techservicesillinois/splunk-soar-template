@@ -11,7 +11,7 @@ from phantom.action_result import ActionResult
 import requests
 import json
 
-from .nice import NiceBaseConnector
+from .nice import NiceBaseConnector, handle
 
 __version__ = 'GITHUB_TAG'
 __git_hash__ = 'GITHUB_SHA'
@@ -20,6 +20,7 @@ __build_time__ = 'BUILD_TIME'
 
 class AppConnector(NiceBaseConnector):
 
+    @handle('test_connectivity', 'test_robots_txt')
     def _handle_test_connectivity(self, param):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
@@ -38,20 +39,6 @@ class AppConnector(NiceBaseConnector):
             f"Test Connectivity Passed: {__version__} ({__git_hash__[0:7]})")
         return action_result.set_status(phantom.APP_SUCCESS,
                                         "Active connection")
-
-    def handle_action(self, param):
-        ret_val = phantom.APP_SUCCESS
-
-        # Get the action that we are supposed to execute for this App Run
-        action_id = self.get_action_identifier()
-
-        self.debug_print("action_id", self.get_action_identifier())
-
-        if action_id in ['test_connectivity', 'test_robots_txt']:
-            ret_val = self._handle_test_connectivity(param)
-        # TODO: Add additional block handlers here
-
-        return ret_val
 
     def initialize(self):
         ret = super(AppConnector, self).initialize()
