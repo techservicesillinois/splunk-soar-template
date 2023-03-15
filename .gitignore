@@ -5,6 +5,7 @@
 *.vscode
 
 # Our Makefile
+.appjson
 .commit
 .deploy
 .lint
