@@ -1,4 +1,4 @@
-# This workflow tests the code in a production-like environment on our internal dev machine.
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
 name: CI/CD
 
 on: [push, pull_request]
