@@ -1,5 +1,4 @@
-# DO NOT EDIT
-# All project-specific values belong in config.mk!
+# DO NOT EDIT - All project-specific values belong in config.mk!
 
 .PHONY: all build clean lint static
 include config.mk
