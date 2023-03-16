@@ -28,6 +28,12 @@ jobs:
       if: ${{ !startsWith(github.ref, 'refs/tags') }}
       run: |
         make build-test
+    - name: Store deployed .tar as an artifcat
+      uses: actions/upload-artifact@v3
+      with:
+        name: deployed tar file
+        path: app.tar
+        retention-days: 7
     - name: Post to Splunk SOAR API
       run: |
         make deploy
