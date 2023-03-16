@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
 
 import base64
 import json
