@@ -3,6 +3,10 @@
 .PHONY: all build clean lint static
 include config.mk
 
+MODULE:=app
+TEST_APP_ID:=5e842053-7364-4a90-a275-2bd838458fef
+TEST_APP_NAME:=Test Box - $(PROD_APP_NAME)
+
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
