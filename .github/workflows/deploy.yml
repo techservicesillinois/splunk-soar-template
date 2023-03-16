@@ -35,6 +35,7 @@ jobs:
         path: app.tar
         retention-days: 7
     - name: Post to Splunk SOAR API
+      if: github.event_name != 'pull_request'
       run: |
         make deploy
       env:
