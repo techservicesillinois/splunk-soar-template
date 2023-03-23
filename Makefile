@@ -20,7 +20,7 @@ VENV_REQS:=.requirements.venv
 ifeq (tag, $(GITHUB_REF_TYPE))
 	TAG?=$(GITHUB_REF_NAME)
 else
-	TAG?=0.0.0
+	TAG?=$(shell printf "0.0.%d" 0x$(shell git rev-parse --short=6 HEAD))
 endif
 GITHUB_SHA?=$(shell git rev-parse HEAD)
 
