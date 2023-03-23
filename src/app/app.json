@@ -14,7 +14,7 @@
     "app_version": "GITHUB_TAG",
     "utctime_updated": "BUILD_TIME",
     "package_name": "MODULE",
-    "main_module": "app.py",
+    "main_module": "MODULE.py",
     "min_phantom_version": "5.3.3.92213",
     "app_wizard_version": "1.0.0",
     "configuration": {
