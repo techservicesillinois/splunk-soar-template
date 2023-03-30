@@ -16,6 +16,18 @@ VERSIONED_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json *.py)
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
+UNAME:=$(shell uname -s)
+
+# BSD `sed` treats the `-i` option differently than Linux and others.
+# Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
+# (This code was adapted from output produced by ChatGPT!)
+ifeq ($(UNAME), Darwin) 
+# macOS (BSD sed) 
+	SED_INPLACE := -i '' 
+else 
+# Linux and others (GNU sed) 
+	SED_INPLACE := -i 
+endif 
 
 ifeq (tag, $(GITHUB_REF_TYPE))
 	TAG?=$(GITHUB_REF_NAME)
@@ -73,8 +85,8 @@ requirements-test.txt: requirements-test.in
 	python -m venv $(VENV_REQS)
 	$(VENV_REQS)/bin/python -m pip install -r $^
 	$(VENV_REQS)/bin/python -m pip freeze -qqq > $@
-	#REMOVE once pytest-splunk-soar-connectors is on pypi
-	sed -i "s;^pytest-splunk-soar-connectors==.*;$(PYTEST_SOAR_REPO);" $@
+# REMOVE once pytest-splunk-soar-connectors is on pypi
+	sed $(SED_INPLACE) "s;^pytest-splunk-soar-connectors==.*;$(PYTEST_SOAR_REPO);" $@
 
 lint: venv .lint
 .lint: $(SRCS) $(TSCS)
