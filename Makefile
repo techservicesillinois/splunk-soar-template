@@ -53,22 +53,22 @@ $(PACKAGE).tar: version $(SOAR_SRCS)
 version: .tag .commit .deployed
 .tag: $(VERSIONED_FILES)
 	echo version $(TAG)
-	sed -i "s/GITHUB_TAG/$(TAG)/" $^
+	sed $(SED_INPLACE) "s/GITHUB_TAG/$(TAG)/" $^
 	touch $@
 .commit: $(VERSIONED_FILES)
 	echo commit $(GITHUB_SHA)
-	sed -i "s/GITHUB_SHA/$(GITHUB_SHA)/" $^
+	sed $(SED_INPLACE) "s/GITHUB_SHA/$(GITHUB_SHA)/" $^
 	touch $@
 .deployed: $(VERSIONED_FILES)
 	echo deployed $(BUILD_TIME)
-	sed -i "s/BUILD_TIME/$(BUILD_TIME)/" $^
+	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
 .appjson: $(SRCS_DIR)/$(PACKAGE).json
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
-	sed -i "s/APP_ID/$(APP_ID)/" $^
-	sed -i "s/APP_NAME/$(APP_NAME)/" $^
-	sed -i "s/MODULE/$(MODULE)/" $^
+	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
+	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
+	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	touch $@
 
 deploy: $(PACKAGE).tar
