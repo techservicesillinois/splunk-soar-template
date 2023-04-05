@@ -20,7 +20,6 @@ UNAME:=$(shell uname -s)
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
-# (This code was adapted from output produced by ChatGPT!)
 ifeq ($(UNAME), Darwin) 
 # macOS (BSD sed) 
 	SED_INPLACE := -i '' 
