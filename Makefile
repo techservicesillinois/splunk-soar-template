@@ -71,7 +71,7 @@ version: .tag .commit .deployed
 	touch $@
 
 deploy: $(PACKAGE).tar
-	python deploy.py $^
+	phantom deploy --file $^
 
 venv: requirements-test.txt
 	rm -rf $@
