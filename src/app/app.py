@@ -10,7 +10,7 @@ from phantom.action_result import ActionResult
 
 import requests
 
-from .nice import NiceBaseConnector, handle
+from phtoolbox.app.base_connector import NiceBaseConnector, handle
 
 __version__ = 'GITHUB_TAG'
 __git_hash__ = 'GITHUB_SHA'
