@@ -4,7 +4,7 @@ import os
 import pytest
 import vcr
 
-from phtoolbox.app import AppConnector
+from app.app import AppConnector
 from vcr_cleaner import CleanYAMLSerializer
 
 # Required pytest plugins
@@ -25,7 +25,7 @@ def connector(monkeypatch) -> AppConnector:
         conn.config = {
             "username": CASSETTE_USERNAME,
             "password": CASSETTE_PASSWORD,
-            "endpoint": CASSETTE_ENDPOINT,git@github.com:techservicesillinois/SecOps-Tools.git
+            "endpoint": CASSETTE_ENDPOINT,
         }
     else:  # User environment values
         env_keys = ['username', 'password', 'endpoint']
