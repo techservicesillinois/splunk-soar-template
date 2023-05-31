@@ -99,8 +99,10 @@ static: venv .static
 	$(VENV_PYTHON) -m mypy $^
 	touch $@
 
-test: venv lint static
+unit: venv
 	$(VENV_PYTHON) -m pytest
+
+test: lint static unit
 	
 clean:
 	rm -rf venv $(VENV_REQS)
