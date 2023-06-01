@@ -71,7 +71,7 @@ version: .tag .commit .deployed
 	touch $@
 
 deploy: venv $(PACKAGE).tar
-	$(VENV_PYTHON) -m phantom deploy --file $^
+	$(VENV_PYTHON) -m phtoolbox deploy --file $^
 
 venv: requirements-test.txt
 	rm -rf $@
