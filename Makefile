@@ -70,8 +70,8 @@ version: .tag .commit .deployed
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	touch $@
 
-deploy: $(PACKAGE).tar
-	phantom deploy --file $^
+deploy: venv $(PACKAGE).tar
+	$(VENV_PYTHON) -m phantom deploy --file $^
 
 venv: requirements-test.txt
 	rm -rf $@
