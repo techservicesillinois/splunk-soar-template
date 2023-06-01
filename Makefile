@@ -70,8 +70,8 @@ version: .tag .commit .deployed
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	touch $@
 
-deploy: $(PACKAGE).tar
-	python deploy.py $^
+deploy: $(PACKAGE).tar venv
+	$(VENV_PYTHON) -m phtoolbox deploy --file $<
 
 venv: requirements-test.txt
 	rm -rf $@
@@ -99,8 +99,13 @@ static: venv .static
 	$(VENV_PYTHON) -m mypy $^
 	touch $@
 
-test: venv lint static
+unit: venv
 	$(VENV_PYTHON) -m pytest
+
+autopep8:
+	autopep8 --in-place $(SRCS)
+
+test: lint static unit
 	
 clean:
 	rm -rf venv $(VENV_REQS)
