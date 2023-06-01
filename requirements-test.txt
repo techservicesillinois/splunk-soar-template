@@ -14,7 +14,7 @@ multidict==6.0.4
 mypy==1.3.0
 mypy-extensions==1.0.0
 packaging==23.1
-phantom-toolbox @ git+https://github.com/techservicesillinois/phantom-toolbox.git@19fc773496c7fd26110f3459303bf51e82fe2320
+phantom-toolbox @ git+https://github.com/techservicesillinois/phantom-toolbox.git@568238231051e26766e2a1278a47973b8e7f8f9a
 pluggy==1.0.0
 pycodestyle==2.10.0
 pyflakes==3.0.1
