@@ -105,6 +105,9 @@ unit: venv
 autopep8:
 	autopep8 --in-place $(SRCS)
 
+black:
+	python -m black $(SRCS)
+
 test: lint static unit
 	
 clean:

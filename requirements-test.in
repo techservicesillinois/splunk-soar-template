@@ -3,6 +3,7 @@ beautifulsoup4
 # Production dependencies (Pulled from soar_null_router.json)
 bhr-client
 # Testing dependencies
+git+https://github.com/psf/black
 flake8
 mypy
 types-beautifulsoup4

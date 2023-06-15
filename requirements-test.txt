@@ -1,31 +1,35 @@
 arrow==0.10.0
 beautifulsoup4==4.12.2
 bhr-client==1.6
+black @ git+https://github.com/psf/black@35722dff623f3cdf5018e3f1183cd4e02e91caa8
 certifi==2023.5.7
 charset-normalizer==3.1.0
+click==8.1.3
 exceptiongroup==1.1.1
 flake8==6.0.0
 idna==3.4
 iniconfig==2.0.0
-markdown-it-py==2.2.0
+markdown-it-py==3.0.0
 mccabe==0.7.0
 mdurl==0.1.2
 multidict==6.0.4
 mypy==1.3.0
 mypy-extensions==1.0.0
 packaging==23.1
+pathspec==0.11.1
 phantom-toolbox @ git+https://github.com/techservicesillinois/phantom-toolbox.git@d44d5b0556f914a735506f1929096016b4036125
+platformdirs==3.5.3
 pluggy==1.0.0
 pycodestyle==2.10.0
 pyflakes==3.0.1
 Pygments==2.15.1
 PyJWT==2.7.0
-pytest==7.3.1
+pytest==7.3.2
 git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 python-dateutil==2.8.2
 PyYAML==6.0
 requests==2.31.0
-rich==13.4.1
+rich==13.4.2
 setuptools-scm==7.1.0
 six==1.16.0
 soupsieve==2.4.1
@@ -36,9 +40,9 @@ types-html5lib==1.1.11.14
 types-jwt==0.1.3
 types-requests==2.31.0.1
 types-urllib3==1.26.25.13
-typing_extensions==4.6.2
+typing_extensions==4.6.3
 urllib3==1.26.15
-vcr-cleaner @ git+https://github.com/techservicesillinois/vcrpy-cleaner.git@16d0abcd4f36d8581284b30e0722771f433a9b03
+vcr-cleaner @ git+https://github.com/techservicesillinois/vcrpy-cleaner.git@9cb27bcc8d0ef5e90588b562cbb7fc355a5fd212
 vcrpy==4.3.1
 wrapt==1.15.0
 yarl==1.9.2
