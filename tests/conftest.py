@@ -64,3 +64,4 @@ def cassette(request) -> vcr.cassette.Cassette:
         if my_vcr.record_mode == 'none':  # Tests only valid when not recording
             assert tape.all_played, \
                 f"Only played back {len(tape.responses)} responses"
+            assert tape.play_count == 1
