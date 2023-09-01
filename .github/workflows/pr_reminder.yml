@@ -1,4 +1,5 @@
-name: PR review reminders
+name: PRs reviews reminder
+
 on:
   schedule:
     # Every weekday at 8:30a CST / 14:30 UTC and 1:30p CST / 19:30 UTC
@@ -8,32 +9,11 @@ jobs:
   pr-reviews-reminder:
     runs-on: ubuntu-latest
     steps:
-    # https://github.com/DavideViolante/pr-reviews-reminder-action/releases
-    - uses: DavideViolante/pr-reviews-reminder-action@v2.6.0
+    - uses: DavideViolante/pr-reviews-reminder-action@v2.7.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         webhook-url: ${{ secrets.TEAMS_WEBHOOK }}
         provider: 'msteams'
-        ignore-label: no-reminder
-        github-provider-map: >-
-          apetsche1:apetsche@illinois.edu,
-          asvalent:asvalent@illinois.edu,
-          baristaTam:buch1@illinois.edu,
-          cstephns:cstephns@illinois.edu,
-          ddriddle:ddriddle@illinois.edu,
-          edthedev:delaport@illinois.edu,
-          gshere:shere@illinois.edu,
-          ktlack:klacker6@illinois.edu,
-          livn46:rheren@illinois.edu,
-          mabaumgartner:mab@illinois.edu,
-          mpitcel:mpitcel2@illinois.edu,
-          PrabhaManda:pmanda@illinois.edu,
-          rdonovan92:rdonovan@illinois.edu,
-          safletcher42:safletch@illinois.edu,
-          spaldr:spaldr@illinois.edu,
-          spencer-sharp:swsharp@illinois.edu,
-          tjuddill:tjudd@illinois.edu,
-          tzturner:tzturner@illinois.edu,
-          wennebo1:wennebo1@illinois.edu,
-          zdc217:zdc@illinois.edu
+        github-provider-map: ${{ vars.MAP_USERNAMES_TEAMS }}
+      
