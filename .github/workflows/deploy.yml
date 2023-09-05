@@ -1,7 +1,15 @@
 # DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
 name: CI/CD
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types:
+      - edited
+      - released
 
 jobs:
   deploy:
@@ -21,11 +29,11 @@ jobs:
       run: |
         make test
     - name: Build Package (Prod)
-      if: startsWith(github.ref, 'refs/tags')
+      if: github.event_name == 'release'
       run: |
         make build
     - name: Build Package (Test)
-      if: ${{ !startsWith(github.ref, 'refs/tags') }}
+      if: github.event_name == 'pull_request'
       run: |
         make build-test
     - name: Store build as an artifact
@@ -35,7 +43,7 @@ jobs:
         path: app.tar
         retention-days: 7
     - name: Post to Splunk SOAR API
-      if: github.event_name != 'pull_request'
+      if: github.event_name == 'release' || github.event_name == 'pull_request'
       run: |
         make deploy
       env:
