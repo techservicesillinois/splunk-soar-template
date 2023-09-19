@@ -62,6 +62,15 @@ In GitHub, under
 `SOAR_HOSTNAME` set to `automate-illinois.soar.splunkcloud.com`
 `SOAR_TOKEN` with your SOAR API token.
 
-### Debugging Deployment
+## Debugging
 
-To read deploy logs, visit SOAR `Administration`, and look under `System Health` and then `Debugging`.
+To read SOAR app logs, visit SOAR `Administration` in the main drop-down, and look under `System Health` and then `Debugging`. 
+
+> Tip: You must have specific permissions assigned to your account to access this area.
+
+Set 'Log Range' to 'Recent Logs'. Click 'Download log.
+Unzip the `.tgz` file with your preferred unzip solution.
+SOAR logs are in the phantom folders, nested pretty deep.
+Deployment logs are in `app_install`.
+
+> For SOAR app logs, you may need to check multiple files, based on which broker your code ran on.
