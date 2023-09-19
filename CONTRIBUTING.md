@@ -64,6 +64,10 @@ In GitHub, under
 
 ## Debugging
 
+To emit a log into the SOAR debug logs, use `self.debug_print`:
+
+    `self.debug_print("git_hash", __git_hash__)`
+
 To read SOAR app logs, visit SOAR `Administration` in the main drop-down, and look under `System Health` and then `Debugging`. 
 
 > Tip: You must have specific permissions assigned to your account to access this area.
