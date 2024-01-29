@@ -1,6 +1,6 @@
 import json
 
-from app.app import AppConnector
+from app import AppConnector
 
 APP_ID = "tacosalad"
 
