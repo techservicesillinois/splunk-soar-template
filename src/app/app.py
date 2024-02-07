@@ -25,7 +25,7 @@ class AppConnector(NiceBaseConnector):
 
         self.save_progress("Connecting to endpoint")
         response = requests.get(
-            self._baseurl,
+            self._api_url,
             allow_redirects=True,
         )
         if response.status_code != 200:
@@ -56,7 +56,7 @@ class AppConnector(NiceBaseConnector):
 
         self._endpoint = config['endpoint']
         self._auth = (config['username'], config['password'])
-        self._baseurl = f"https://{self._endpoint}"
+        self._api_url = f"https://{self._endpoint}"
         self._username = config['username']
 
         return ret
