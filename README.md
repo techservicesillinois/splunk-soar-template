@@ -15,5 +15,5 @@ See [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 ## Endpoint Connections
 
-|Endpoint|Purpose|Stage|Access|
-|--------|-------|-----|------|
+|Endpoint|Purpose|Stage|Access|Contact|
+|--------|-------|-----|------|-------|
