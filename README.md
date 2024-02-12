@@ -1,4 +1,6 @@
-# Splunk SOAR
+# About
+
+This Project depends upon [Phantom Toolbox](https://github.com/techservicesillinois/phantom-toolbox) for shared functionality. 
 
 ## About Splunk SOAR
 
