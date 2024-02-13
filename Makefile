@@ -1,10 +1,11 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build clean lint static
+.PHONY: all build clean lint static python-version
 include config.mk
 
 MODULE:=app
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
+SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}.{V[2]}")')
 
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
@@ -73,10 +74,17 @@ version: .tag .commit .deployed
 deploy: $(PACKAGE).tar venv
 	$(VENV_PYTHON) -m phtoolbox deploy --file $<
 
-venv: requirements-test.txt
+python-version:
+	@echo $(SOAR_PYTHON_VERSION)
+
+.python-version: tests/test_python_version.py
+	pyenv install -s $(SOAR_PYTHON_VERSION)
+	pyenv local $(SOAR_PYTHON_VERSION)
+
+venv: requirements-test.txt .python-version
 	rm -rf $@
 	python -m venv venv
-	$(VENV_PYTHON) -m pip install -r $^
+	$(VENV_PYTHON) -m pip install -r $<
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
@@ -116,4 +124,4 @@ clean:
 	git checkout -- $(TAG_FILES)
 
 force-clean: clean
-	rm -f requirements-test.txt
+	rm -f requirements-test.txt .python-version
