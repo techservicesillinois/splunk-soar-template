@@ -13,9 +13,16 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
+    - name: Set Python version file
+      run: |
+        make python-version >> .python-version
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version-file: '.python-version' # Read version from a file
     - name: Virtual Env
       run: |
         make venv
