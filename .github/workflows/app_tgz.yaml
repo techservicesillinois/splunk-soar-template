@@ -18,6 +18,6 @@ jobs:
     - name: Store build as an artifact
       uses: actions/upload-artifact@v3
       with:
-        name: SOAR Midpoint App
+        name: SOAR Template App
         path: app.tar
         retention-days: 365
