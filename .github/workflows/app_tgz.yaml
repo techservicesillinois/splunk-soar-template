@@ -1,0 +1,23 @@
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
+name: create tgz
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create_tgz:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Virtual Env
+      run: |
+        make venv
+    - name: Build Package (Prod)
+      run: |
+        make build
+    - name: Store build as an artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: SOAR Template App
+        path: app.tar
+        retention-days: 365
