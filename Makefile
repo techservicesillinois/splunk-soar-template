@@ -46,7 +46,7 @@ build: .appjson $(PACKAGE).tar
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
 #build-test: .appjson $(PACKAGE).tar
-build-test: copy-src
+build-test: copy-src .appjson
 
 copy-src:
 	rm -rf $(BUILD_DIR)
