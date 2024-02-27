@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build clean lint static python-version
+.PHONY: all build clean lint static python-version copy-src
 include config.mk
 
 MODULE:=app
@@ -10,6 +10,7 @@ SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_versio
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
+BUILD_DIR:=build
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
@@ -21,13 +22,13 @@ UNAME:=$(shell uname -s)
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
-ifeq ($(UNAME), Darwin) 
-# macOS (BSD sed) 
-	SED_INPLACE := -i '' 
-else 
-# Linux and others (GNU sed) 
-	SED_INPLACE := -i 
-endif 
+ifeq ($(UNAME), Darwin)
+# macOS (BSD sed)
+	SED_INPLACE := -i ''
+else
+# Linux and others (GNU sed)
+	SED_INPLACE := -i
+endif
 
 ifeq (tag, $(GITHUB_REF_TYPE))
 	TAG?=$(GITHUB_REF_NAME)
@@ -44,7 +45,16 @@ build: .appjson $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: .appjson $(PACKAGE).tar
+#build-test: .appjson $(PACKAGE).tar
+build-test: copy-src
+
+copy-src:
+	rm -rf $(BUILD_DIR)
+	cp -r $(SRCS_DIR) $(BUILD_DIR)
+
+#TODO: Remove
+debug:
+	echo $(SOAR_SRCS)
 
 $(PACKAGE).tar: version $(SOAR_SRCS)
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
@@ -63,7 +73,7 @@ version: .tag .commit .deployed
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
-.appjson: $(SRCS_DIR)/$(PACKAGE).json
+.appjson: $(BUILD_DIR)/$(PACKAGE).json
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
@@ -114,7 +124,7 @@ autopep8:
 	autopep8 --in-place $(SRCS)
 
 test: lint static unit
-	
+
 clean:
 	rm -rf venv $(VENV_REQS)
 	rm -rf .lint .static
