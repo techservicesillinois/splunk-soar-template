@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build clean lint static python-version
+.PHONY: all build build-test clean lint static python-version
 include config.mk
 
 MODULE:=app
@@ -11,9 +11,10 @@ PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
+DIST_DIR:=dist/$(MODULE)
+DIST_SRCS:=$(addprefix $(DIST_DIR)/, $(PACKAGE).json *.py)
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
-VERSIONED_FILES:=$(addprefix $(SRCS_DIR)/, $(PACKAGE).json *.py)
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
@@ -21,13 +22,13 @@ UNAME:=$(shell uname -s)
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
-ifeq ($(UNAME), Darwin) 
-# macOS (BSD sed) 
-	SED_INPLACE := -i '' 
-else 
-# Linux and others (GNU sed) 
-	SED_INPLACE := -i 
-endif 
+ifeq ($(UNAME), Darwin)
+# macOS (BSD sed)
+	SED_INPLACE := -i ''
+else
+# Linux and others (GNU sed)
+	SED_INPLACE := -i
+endif
 
 ifeq (tag, $(GITHUB_REF_TYPE))
 	TAG?=$(GITHUB_REF_NAME)
@@ -40,30 +41,35 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: .appjson $(PACKAGE).tar
+build: dist $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: .appjson $(PACKAGE).tar
+build-test: dist $(PACKAGE).tar
 
-$(PACKAGE).tar: version $(SOAR_SRCS)
-	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	tar cvf $@ -C src $(MODULE)
+dist: $(DIST_DIR) $(DIST_SRCS) .appjson version
+$(DIST_DIR):
+	mkdir -p $@
+$(DIST_SRCS): $(SOAR_SRCS)
+	cp -r $^ $(DIST_DIR)
+
+$(PACKAGE).tar: $(DIST_SRCS)
+	tar cvf $@ -C dist $(MODULE)
 
 version: .tag .commit .deployed
-.tag: $(VERSIONED_FILES)
+.tag: $(DIST_SRCS)
 	echo version $(TAG)
 	sed $(SED_INPLACE) "s/GITHUB_TAG/$(TAG)/" $^
 	touch $@
-.commit: $(VERSIONED_FILES)
+.commit: $(DIST_SRCS)
 	echo commit $(GITHUB_SHA)
 	sed $(SED_INPLACE) "s/GITHUB_SHA/$(GITHUB_SHA)/" $^
 	touch $@
-.deployed: $(VERSIONED_FILES)
+.deployed: $(DIST_SRCS)
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
-.appjson: $(SRCS_DIR)/$(PACKAGE).json
+.appjson: $(DIST_DIR)/$(PACKAGE).json
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
@@ -114,14 +120,13 @@ autopep8:
 	autopep8 --in-place $(SRCS)
 
 test: lint static unit
-	
+
 clean:
 	rm -rf venv $(VENV_REQS)
 	rm -rf .lint .static
 	rm -rf .mypy_cache
+	rm -rf dist
 	rm -f $(PACKAGE).tar .tag
-	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	git checkout -- $(TAG_FILES)
 
 force-clean: clean
 	rm -f requirements-test.txt .python-version
