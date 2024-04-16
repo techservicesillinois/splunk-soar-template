@@ -16,7 +16,7 @@ VALUES=(
 )
 
 for i in ${!VALUES[@]}; do 
-    if git grep "${VALUES[$i]}" -- :^first_run_check.sh
+    if git grep "${VALUES[$i]}" -- :^run_first_check.sh
     then
         echo "Failed to update ${KEYS[$i]}!" && exit 1
     fi
