@@ -4,14 +4,12 @@ KEYS=(
     MODULE
     PROD_APP_ID
     APP_NAME
-    TEST_APP_NAME
     TODO
 )
 VALUES=(
     illinois_app
     fc618bee-352f-461a-95b5-bc0a2395302a
     "Illinois Test Template app"
-    "Test Box"
     TODO
 )
 
