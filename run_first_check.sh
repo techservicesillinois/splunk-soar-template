@@ -4,19 +4,17 @@ KEYS=(
     MODULE
     PROD_APP_ID
     APP_NAME
-    TEST_APP_NAME
     TODO
 )
 VALUES=(
     illinois_app
     fc618bee-352f-461a-95b5-bc0a2395302a
-    "Test Template Repo"
-    "Test Box"
+    "Template DO NOT USE"
     TODO
 )
 
 for i in ${!VALUES[@]}; do 
-    if git grep "${VALUES[$i]}" -- :^first_run_check.sh
+    if git grep "${VALUES[$i]}" -- :^run_first_check.sh
     then
         echo "Failed to update ${KEYS[$i]}!" && exit 1
     fi
