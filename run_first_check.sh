@@ -1,3 +1,4 @@
+# REMINDER: Remove this file, and `.github/workflows/run_first_check.yml` after these tests pass
 # Exit on non-zero exit code
 set -e
 KEYS=(
