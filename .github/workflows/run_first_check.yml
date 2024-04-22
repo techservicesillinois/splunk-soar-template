@@ -1,3 +1,4 @@
+# REMINDER: Remove this file, and `run_first_check.sh` after these tests pass
 name: Template Repository Child Test
 
 on: [push, pull_request]
