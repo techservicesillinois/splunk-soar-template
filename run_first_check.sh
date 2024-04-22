@@ -1,3 +1,4 @@
+# REMINDER: Remove this file after these tests pass
 # Exit on non-zero exit code
 set -e
 KEYS=(
