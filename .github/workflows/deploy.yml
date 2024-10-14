@@ -52,7 +52,8 @@ jobs:
     - name: Post to Splunk SOAR API
       if: github.event_name == 'release' || github.event_name == 'pull_request'
       run: |
-        make deploy
+#       make deploy
+        echo 'deployment is currently disabled in the make file'
       env:
         SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
         SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
