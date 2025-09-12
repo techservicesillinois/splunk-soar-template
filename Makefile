@@ -47,6 +47,10 @@ build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
 build-test: dist $(PACKAGE).tar
 
+deps: deps-deploy
+deps-deploy: # Install deps for deploy.py on Github
+	pip install requests
+
 dist: $(DIST_DIR) $(DIST_SRCS) .appjson version
 $(DIST_DIR):
 	mkdir -p $@

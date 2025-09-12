@@ -10,12 +10,22 @@ on:
     types:
       - edited
       - released
+  workflow_dispatch:  # Allows creation of .tar release for peers.
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
 
 jobs:
-  deploy:
-    runs-on: ubuntu-20.04
+  test_build_deploy:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
     - name: Set Python version file
       run: |
         make python-version >> .python-version
@@ -23,6 +33,10 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version-file: '.python-version' # Read version from a file
+    - uses: actions/checkout@v4
+    - name: Install deps
+      run: |
+        make deps
     - name: Virtual Env
       run: |
         make venv
@@ -36,7 +50,7 @@ jobs:
       run: |
         make test
     - name: Build Package (Prod)
-      if: github.event_name == 'release'
+      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
       run: |
         make build
     - name: Build Package (Test)
@@ -48,7 +62,7 @@ jobs:
       with:
         name: deployed tar file
         path: app.tar
-        retention-days: 7
+        retention-days: 90
     - name: Post to Splunk SOAR API
       if: github.event_name == 'release' || github.event_name == 'pull_request'
       run: |
