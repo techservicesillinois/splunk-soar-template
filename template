@@ -15,7 +15,7 @@ import shutil
 import sys
 import tempfile
 
-from os import makedirs
+from os import getcwd, makedirs
 from os.path import join, dirname
 from urllib.parse import urljoin
 
@@ -72,8 +72,8 @@ def compare_repo(args):
     else:
         sys.exit(0)
 
-def update_repo():
-    repo = Repo(os.getcwd(), search_parent_directories=True)
+def update_repo(args):
+    repo = Repo(getcwd(), search_parent_directories=True)
 
     if repo.is_dirty():
         print("Repo is dirty. Please stash or commit changes!")
@@ -114,9 +114,6 @@ def init_parser():
     compare.set_defaults(func=compare_repo)
 
     return parser
-
-def update_repo(args):
-    print("Updated!", args)
 
 # TODO: This script needs to be run from the root of the repo!
 # Add code to make sure we are there. It's easy to find just look for .git!
