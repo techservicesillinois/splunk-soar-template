@@ -11,14 +11,18 @@ example:
 
 import argparse
 import filecmp
-import tempfile
+import shutil
 import sys
+import tempfile
 
 from os import makedirs
 from os.path import join, dirname
 from urllib.parse import urljoin
 
 import requests
+
+from git import Repo
+
 
 GITHUB_ORG_URL = 'https://raw.githubusercontent.com/techservicesillinois'
 REPO_URL = f'{GITHUB_ORG_URL}/splunk-soar-template/refs/heads/main/'
@@ -67,6 +71,34 @@ def compare_repo(args):
         sys.exit(1)
     else:
         sys.exit(0)
+
+def update_repo():
+    repo = Repo(os.getcwd(), search_parent_directories=True)
+
+    if repo.is_dirty():
+        print("Repo is dirty. Please stash or commit changes!")
+        sys.exit(2)
+
+    user_branch = repo.active_branch  # Save active_branch; restore below.
+    branch = repo.create_head("feature/update_soar_template_files")
+    branch.checkout()
+
+    for filename, tmpf in TMP_FILES.items():
+        copyfile(tmpf, filename)
+        repo.index.add(filename)
+
+    if repo.is_dirty():
+        repo.index.commit(
+            'Update static template files from splunk-soar-template.'
+        )
+    else:
+        print(f"{user_branch} is already up-to-date!")
+        repo.git.checkout('-')
+        repo.delete_head(branch)
+
+    repo.git.checkout('-')
+    sys.exit(0)
+
 
 def init_parser():
     parser = argparse.ArgumentParser(
