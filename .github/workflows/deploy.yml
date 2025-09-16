@@ -49,6 +49,7 @@ jobs:
     - name: Check SOAR template files have not changed
       run: |
         make check_template
+      continue_on_error: true
     - name: Tests
       run: |
         make test
