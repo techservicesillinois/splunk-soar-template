@@ -1,6 +1,8 @@
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
 import sys
 
-SOAR_PYTHON_VERSION = (3, 13)
+
+SOAR_PYTHON_VERSION = (3, 13)  # Splunk SOAR platform Python version
 
 
 def test_python_version():
