@@ -93,6 +93,7 @@ def update_repo(args):
         )
     else:
         print(f"{user_branch} is already up-to-date!")
+        breakpoint()
         repo.git.checkout('-')
         repo.delete_head(branch)
 
