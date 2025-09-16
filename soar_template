@@ -5,8 +5,8 @@ description:
   Compare and update repo to match template.
 
 example:
+    template compare
     template update
-    template diff
 """
 
 import argparse
@@ -32,7 +32,6 @@ FILES = [
     'Makefile',
 #    'soar_template',  # Not in main yet!
     '.github/workflows/deploy.yml',
-    'deploy.py',
     'tests/test_python_version.py',
 ]
 
@@ -40,6 +39,7 @@ TMP_FILES = {}
 
 def github_download(path):
     '''Download files from splunk-soar-template repo to tmpdir. '''
+    repo_url = urljoin(REPO_URL, path)
     response = requests.get(urljoin(REPO_URL, path))
 
     if response.status_code == 200:
