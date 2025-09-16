@@ -5,7 +5,7 @@ include config.mk
 
 MODULE:=app
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
-SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}.{V[2]}")')
+SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
