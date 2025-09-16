@@ -33,6 +33,7 @@ FILES = [
     'Makefile',
 #    'template',  # Not in main yet!
     '.github/workflows/deploy.yml',
+    'deploy.py',
     'tests/test_python_version.py',
 ]
 
