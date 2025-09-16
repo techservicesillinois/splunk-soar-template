@@ -31,7 +31,7 @@ TMPDIR = tempfile.TemporaryDirectory(prefix='soar.template')
 # These FILES should never differ from the template!
 FILES = [
     'Makefile',
-#    'template',  # Not in main yet!
+#    'soar_template',  # Not in main yet!
     '.github/workflows/deploy.yml',
     'deploy.py',
     'tests/test_python_version.py',
@@ -120,8 +120,13 @@ def init_parser():
 # TODO: This script needs to be run from the root of the repo!
 # Add code to make sure we are there. It's easy to find just look for .git!
 def main():
+
     parser = init_parser()
     args = parser.parse_args()
+
+    if not '.git' in os.listdir(os.curdir):
+        print("soar_template must run from repository root.")
+        exit(1)
 
     for path in FILES:
         TMP_FILES[path] = github_download(path)
