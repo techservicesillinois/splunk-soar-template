@@ -123,7 +123,10 @@ unit: venv
 autopep8:
 	autopep8 --in-place $(SRCS)
 
-test: lint static unit
+check_template:
+	$(VENV_PYTHON) soar_template compare
+
+test: lint static check_template unit 
 
 clean:
 	rm -rf venv $(VENV_REQS)
