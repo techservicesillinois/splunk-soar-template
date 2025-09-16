@@ -34,6 +34,8 @@ FILES = [
     'soar_template',  # Not in main yet!
     '.github/workflows/deploy.yml',
     'tests/test_python_version.py',
+    'SECURITY.md',
+    'CODE_OF_CONDUCT.md'
 ]
 
 TMP_FILES = {}

@@ -1,3 +1,4 @@
+<!-- DO NOT EDIT - Update techservicesillinois/splunk-soar-template first -->
 # Security Policy
 
 ## Supported Versions
