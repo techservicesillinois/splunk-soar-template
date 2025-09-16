@@ -16,7 +16,7 @@ import shutil
 import sys
 import tempfile
 
-from os import getcwd, makedirs
+from os import makedirs
 from os.path import join, dirname
 from urllib.parse import urljoin
 
@@ -37,9 +37,9 @@ FILES = [
 
 TMP_FILES = {}
 
+
 def github_download(path):
     '''Download files from splunk-soar-template repo to tmpdir. '''
-    repo_url = urljoin(REPO_URL, path)
     response = requests.get(urljoin(REPO_URL, path))
 
     if response.status_code == 200:
@@ -50,13 +50,13 @@ def github_download(path):
         with open(filename, 'wb') as f:
             f.write(response.content)
     else:
-        breakpoint()
         raise Exception(
             f"Failed to download {path}. "
             f"Status code: {response.status_code}"
         )
 
     return filename
+
 
 def compare_repo(args):
     '''Compare unchanging files to splunk-soar-template. '''
@@ -72,13 +72,15 @@ def compare_repo(args):
     else:
         sys.exit(0)
 
+
 def update_repo(args):
 
     for filename, tmpf in TMP_FILES.items():
         try:
             shutil.copyfile(tmpf, filename)
-        except ex:
-            print(f"Failed to update {filename}. {ex.message}", file=sys.stderr)
+        except Exception as ex:
+            print(f"Failed to update {filename}. {ex.message}",
+                  file=sys.stderr)
             sys.exit(1)
 
     sys.exit(0)
@@ -99,12 +101,12 @@ def init_parser():
 
     return parser
 
-def main():
 
+def main():
     parser = init_parser()
     args = parser.parse_args()
 
-    if not '.git' in os.listdir(os.curdir):
+    if '.git' not in os.listdir(os.curdir):
         print("soar_template must run from repository root.")
         exit(1)
 
@@ -116,6 +118,7 @@ def main():
     else:
         parser.print_help(sys.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
