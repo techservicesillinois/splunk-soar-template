@@ -74,7 +74,7 @@ def compare_repo(args):
 
 
 def update_repo(args):
-
+    '''Update unchanging files to latest version from splunk-soar-template. '''
     for filename, tmpf in TMP_FILES.items():
         try:
             shutil.copyfile(tmpf, filename)
