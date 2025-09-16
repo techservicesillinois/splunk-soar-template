@@ -26,6 +26,7 @@ jobs:
   test_build_deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - name: Set Python version file
       run: |
         make python-version >> .python-version
@@ -33,7 +34,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version-file: '.python-version' # Read version from a file
-    - uses: actions/checkout@v4
     - name: Install deps
       run: |
         make deps
