@@ -30,7 +30,7 @@ TMPDIR = tempfile.TemporaryDirectory(prefix='soar.template')
 # These FILES should never differ from the template!
 FILES = [
     'Makefile',
-#    'soar_template',  # Not in main yet!
+    'soar_template',  # Not in main yet!
     '.github/workflows/deploy.yml',
     'tests/test_python_version.py',
 ]
