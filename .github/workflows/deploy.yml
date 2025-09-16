@@ -47,14 +47,14 @@ jobs:
       run: |
         make static 
     - name: Check SOAR template files have not changed
+      if: github.event.repository.name == 'release'
       run: |
         make check_template
-      continue_on_error: true
     - name: Tests
       run: |
         make test
     - name: Build Package (Prod)
-      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      if: github.event_name != 'splunk-soar-template'
       run: |
         make build
     - name: Build Package (Test)
