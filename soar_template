@@ -99,7 +99,6 @@ def init_parser():
 
     return parser
 
-# Add code to make sure we are there. It's easy to find just look for .git!
 def main():
 
     parser = init_parser()
