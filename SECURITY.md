@@ -1,8 +1,9 @@
+<!-- DO NOT EDIT - Update techservicesillinois/splunk-soar-template first -->
 # Security Policy
 
 ## Supported Versions
 
-Patches for farmit will only be applied to the current release.
+Patches for this product will only be applied to the current release.
 
 ## Reporting a Bug or Vulnerability
 

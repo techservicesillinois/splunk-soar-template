@@ -46,6 +46,9 @@ jobs:
     - name: Static checks
       run: |
         make static 
+    - name: Check SOAR template files have not changed
+      run: |
+        make check_template
     - name: Tests
       run: |
         make test

@@ -1,0 +1,127 @@
+#!/usr/bin/env python
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
+
+"""
+description:
+  Compare and update repo to match template.
+
+example:
+    template compare
+    template update
+"""
+
+import argparse
+import filecmp
+import os
+import shutil
+import sys
+import tempfile
+
+from os import makedirs
+from os.path import join, dirname
+from urllib.parse import urljoin
+
+import requests
+
+
+GITHUB_ORG_URL = 'https://raw.githubusercontent.com/techservicesillinois'
+REPO_URL = f'{GITHUB_ORG_URL}/splunk-soar-template/refs/heads/main/'
+TMPDIR = tempfile.TemporaryDirectory(prefix='soar.template')
+
+# These FILES should never differ from the template!
+FILES = [
+    'Makefile',
+    'soar_template',
+    '.github/workflows/deploy.yml',
+    'tests/test_python_version.py',
+    'SECURITY.md',
+    'CODE_OF_CONDUCT.md'
+]
+
+TMP_FILES = {}
+
+
+def github_download(path):
+    '''Download files from splunk-soar-template repo to tmpdir. '''
+    response = requests.get(urljoin(REPO_URL, path))
+
+    if response.status_code == 200:
+        filename = join(TMPDIR.name, path)
+        directory = dirname(filename)
+
+        makedirs(directory, exist_ok=True)
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+    else:
+        raise Exception(
+            f"Failed to download {path}. "
+            f"Status code: {response.status_code}"
+        )
+
+    return filename
+
+
+def compare_repo(args):
+    '''Compare unchanging files to splunk-soar-template. '''
+    differ = False
+
+    for filename, tmpf in TMP_FILES.items():
+        if not filecmp.cmp(filename, tmpf, shallow=False):
+            differ = True
+            print(f"{filename} differs.", file=sys.stderr)
+
+    if differ:
+        sys.exit(1)
+    else:
+        sys.exit(0)
+
+
+def update_repo(args):
+    '''Update unchanging files to latest version from splunk-soar-template. '''
+    for filename, tmpf in TMP_FILES.items():
+        try:
+            shutil.copyfile(tmpf, filename)
+        except Exception as ex:
+            print(f"Failed to update {filename}. {ex.message}",
+                  file=sys.stderr)
+            sys.exit(1)
+
+    sys.exit(0)
+
+
+def init_parser():
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers()
+
+    update = subparsers.add_parser('update', aliases=['up'])
+    update.set_defaults(func=update_repo)
+
+    compare = subparsers.add_parser('compare', aliases=['cmp'])
+    compare.set_defaults(func=compare_repo)
+
+    return parser
+
+
+def main():
+    parser = init_parser()
+    args = parser.parse_args()
+
+    if '.git' not in os.listdir(os.curdir):
+        print("soar_template must run from repository root.")
+        exit(1)
+
+    for path in FILES:
+        TMP_FILES[path] = github_download(path)
+
+    if hasattr(args, 'func'):
+        args.func(args)
+    else:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

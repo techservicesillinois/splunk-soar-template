@@ -5,7 +5,7 @@ include config.mk
 
 MODULE:=app
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
-SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}.{V[2]}")')
+SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
@@ -123,7 +123,12 @@ unit: venv
 autopep8:
 	autopep8 --in-place $(SRCS)
 
-test: lint static unit
+check_template: venv .check_template
+.check_template:
+	$(VENV_PYTHON) soar_template compare
+	touch $@
+
+test: lint static check_template unit 
 
 clean:
 	rm -rf venv $(VENV_REQS)
