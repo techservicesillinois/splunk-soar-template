@@ -58,7 +58,7 @@ jobs:
       run: |
         make test
     - name: Build Package (Prod)
-      if: github.event_name == 'release'
+      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
       run: |
         make build
     - name: Build Package (Test)
