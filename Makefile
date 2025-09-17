@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build build-test clean lint static python-version
+.PHONY: all build build-test clean lint static python-version wheels
 include config.mk
 
 MODULE:=app
@@ -47,6 +47,7 @@ build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
 build-test: dist $(PACKAGE).tar
 
+
 deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
@@ -57,8 +58,9 @@ $(DIST_DIR):
 $(DIST_SRCS): $(SOAR_SRCS)
 	cp -r $^ $(DIST_DIR)
 
-$(PACKAGE).tar: $(DIST_SRCS)
-	tar cvf $@ -C dist $(MODULE)
+$(PACKAGE).tar: version $(SOAR_SRCS) wheels
+	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
+	tar cvf $@ -C src $(MODULE)
 
 version: .tag .commit .deployed
 .tag: $(DIST_SRCS)
@@ -73,12 +75,17 @@ version: .tag .commit .deployed
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
-.appjson: $(DIST_DIR)/$(PACKAGE).json
+.appjson: $(DIST_DIR)/$(PACKAGE).json $(WHEELS)
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
+	echo wheel: $(shell ls $(WHEELS))
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
 	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
+	@echo "WHEELS: $(WHEELS)"
+# TODO: Add a SED command here for any custom library packaging.
+# sed $(SED_INPLACE) "s/WHEEL_TDX/$(shell ls $(WHEELS) | grep -E 'TDX.*\.whl')/" $@
+	sed $(SED_INPLACE) "s/WHEEL_TOOLBOX/$(shell ls ./$(WHEELS) | grep -E 'phantom_toolbox.*\.whl')/" $@
 	touch $@
 
 deploy: $(PACKAGE).tar venv
@@ -95,6 +102,10 @@ venv: requirements-test.txt .python-version
 	rm -rf $@
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $<
+
+wheels: $(WHEELS)
+$(WHEELS): requirements.in
+	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
