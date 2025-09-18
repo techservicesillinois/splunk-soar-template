@@ -26,6 +26,7 @@ jobs:
   test_build_deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - name: Set Python version file
       run: |
         make python-version >> .python-version
@@ -33,7 +34,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version-file: '.python-version' # Read version from a file
-    - uses: actions/checkout@v4
     - name: Install deps
       run: |
         make deps
@@ -47,8 +47,13 @@ jobs:
       run: |
         make static 
     - name: Check SOAR template files have not changed
+      if: github.event.repository.name != 'splunk-soar-template'
       run: |
         make check_template
+    - name: Skip template check in template repo
+      if: github.event.repository.name == 'splunk-soar-template'
+      run: |
+        touch .check_template
     - name: Tests
       run: |
         make test
@@ -67,10 +72,9 @@ jobs:
         path: app.tar
         retention-days: 90
     - name: Post to Splunk SOAR API
-      if: github.event_name == 'release' || github.event_name == 'pull_request'
+      if: (github.event_name == 'release' || github.event_name == 'pull_request') && github.event.repository.name != 'splunk-soar-template'
       run: |
-#       make deploy
-        echo 'deployment is currently disabled in the make file'
+        make deploy
       env:
         SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
         SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
