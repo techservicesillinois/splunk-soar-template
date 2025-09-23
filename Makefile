@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build build-test clean lint static python-version
+.PHONY: all build build-test clean lint static python-version wheels
 include config.mk
 
 MODULE:=app
@@ -10,15 +10,21 @@ SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_versio
 PACKAGE:=app
 SRCS_DIR:=src/$(MODULE)
 TSCS_DIR:=tests
-SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
+SOAR_SRCS:=$(SRCS_DIR)/app.py $(SRCS_DIR)/logo.png
+SOAR_JSON:=$(SRCS_DIR)/app.json
 DIST_DIR:=dist/$(MODULE)
-DIST_SRCS:=$(addprefix $(DIST_DIR)/, $(PACKAGE).json *.py)
+DIST_SRCS:=$(DIST_DIR)/app.py $(DIST_DIR)/logo.png
+DIST_JSON:=$(DIST_DIR)/app.json
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
+WHEELS:=$(DIST_DIR)/wheels
+
+debug:
+	echo $(DIST_SRCS)
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
@@ -51,14 +57,18 @@ deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
-dist: $(DIST_DIR) $(DIST_SRCS) .appjson version
+dist: $(DIST_DIR) $(DIST_SRCS) $(DIST_JSON) version
 $(DIST_DIR):
 	mkdir -p $@
 $(DIST_SRCS): $(SOAR_SRCS)
 	cp -r $^ $(DIST_DIR)
 
-$(PACKAGE).tar: $(DIST_SRCS)
+$(DIST_JSON): $(SOAR_JSON) wheels venv
+	$(VENV_PYTHON) -m phtoolbox deps -i $(SOAR_JSON) -o $@ wheels
+
+$(PACKAGE).tar: $(DIST_DIR) $(DIST_SRCS) $(DIST_JSON)
 	tar cvf $@ -C dist $(MODULE)
+
 
 version: .tag .commit .deployed
 .tag: $(DIST_SRCS)
@@ -73,13 +83,6 @@ version: .tag .commit .deployed
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
-.appjson: $(DIST_DIR)/$(PACKAGE).json
-	echo appid: $(APP_ID)
-	echo name:  $(APP_NAME)
-	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
-	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
-	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
-	touch $@
 
 deploy: $(PACKAGE).tar venv
 	$(VENV_PYTHON) -m phtoolbox deploy --file $<
@@ -91,10 +94,15 @@ python-version:
 	pyenv install -s $(SOAR_PYTHON_VERSION)
 	pyenv local $(SOAR_PYTHON_VERSION)
 
-venv: requirements-test.txt .python-version
+venv: requirements-test.txt requirements.in
 	rm -rf $@
 	python -m venv venv
-	$(VENV_PYTHON) -m pip install -r $<
+	$(VENV_PYTHON) -m pip install -r requirements-test.txt
+	$(VENV_PYTHON) -m pip install -r requirements.in
+
+wheels: $(WHEELS)
+$(WHEELS): requirements.in
+	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
