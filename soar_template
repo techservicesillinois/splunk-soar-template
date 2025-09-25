@@ -128,7 +128,12 @@ def main():
 
     for path in FILES:
         if(args.source_dir):
-            TMP_FILES[path] = os.path.join(args.source_dir, path)
+            file_path = os.path.join(args.source_dir, path)
+            if(not os.path.isfile(file_path)):
+               print(f"Missing file in `--source-dir`: {file_path}",
+                     file=sys.stderr)
+               exit(1)
+            TMP_FILES[path] = file_path
         else:
             TMP_FILES[path] = github_download(path)
 
