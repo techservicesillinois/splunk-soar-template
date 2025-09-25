@@ -6,6 +6,7 @@
 
 # Our Makefile
 .appjson
+.check_template
 .commit
 .deploy
 .lint

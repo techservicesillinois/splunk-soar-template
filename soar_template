@@ -89,11 +89,24 @@ def update_repo(args):
     sys.exit(0)
 
 
+def directory(path):
+    if not os.path.isdir(path):
+        raise argparse.ArgumentTypeError(f"{path}: not a valid directory.")
+    return path
+
+
 def init_parser():
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
+    parser.add_argument(
+            "-s",
+            "--source-dir",
+            type=directory,
+            help="Local directory instead of remote git repository")
+
     subparsers = parser.add_subparsers()
 
     update = subparsers.add_parser('update', aliases=['up'])
@@ -114,7 +127,15 @@ def main():
         exit(1)
 
     for path in FILES:
-        TMP_FILES[path] = github_download(path)
+        if args.source_dir:
+            file_path = os.path.join(args.source_dir, path)
+            if not os.path.isfile(file_path):
+                print(f"Missing file in `--source-dir`: {file_path}",
+                      file=sys.stderr)
+                exit(1)
+            TMP_FILES[path] = file_path
+        else:
+            TMP_FILES[path] = github_download(path)
 
     if hasattr(args, 'func'):
         args.func(args)

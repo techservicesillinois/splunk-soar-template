@@ -106,7 +106,7 @@ requirements-test.txt: requirements-test.in
 	sed $(SED_INPLACE) "s;^pytest-splunk-soar-connectors==.*;$(PYTEST_SOAR_REPO);" $@
 
 lint: venv .lint
-.lint: $(SRCS) $(TSCS)
+.lint: $(SRCS) $(TSCS) soar_template
 	$(VENV_PYTHON) -m flake8 $?
 	touch $@
 
