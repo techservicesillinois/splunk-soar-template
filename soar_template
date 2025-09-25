@@ -100,21 +100,20 @@ def init_parser():
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparsers = parser.add_subparsers()
 
-    source_dir_args = ["-s",
-                       "--source-dir"]
-    source_dir_kwargs = {
-            "type":directory,
-            "help":"Local directory instead of remote git repository"}
+    parser.add_argument(
+            "-s",
+            "--source-dir",
+            type=directory,
+            help="Local directory instead of remote git repository")
+
+    subparsers = parser.add_subparsers()
 
     update = subparsers.add_parser('update', aliases=['up'])
     update.set_defaults(func=update_repo)
-    update.add_argument(*source_dir_args, **source_dir_kwargs)
 
     compare = subparsers.add_parser('compare', aliases=['cmp'])
     compare.set_defaults(func=compare_repo)
-    compare.add_argument(*source_dir_args, **source_dir_kwargs)
 
     return parser
 
