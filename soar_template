@@ -128,7 +128,10 @@ def main():
         exit(1)
 
     for path in FILES:
-        TMP_FILES[path] = github_download(path)
+        if(args.source_dir):
+            TMP_FILES[path] = os.path.join(args.source_dir, path)
+        else:
+            TMP_FILES[path] = github_download(path)
 
     if hasattr(args, 'func'):
         args.func(args)
