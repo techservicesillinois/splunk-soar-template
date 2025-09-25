@@ -89,6 +89,12 @@ def update_repo(args):
     sys.exit(0)
 
 
+def directory(path):
+    if not os.path.isdir(path):
+        raise argparse.ArgumentTypeError(f"{path}: not a valid directory.")
+    return path
+
+
 def init_parser():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -96,11 +102,19 @@ def init_parser():
     )
     subparsers = parser.add_subparsers()
 
+    source_dir_args = ["-s",
+                       "--source-dir"]
+    source_dir_kwargs = {
+            "type":directory,
+            "help":"Local directory instead of remote git repository"}
+
     update = subparsers.add_parser('update', aliases=['up'])
     update.set_defaults(func=update_repo)
+    update.add_argument(*source_dir_args, **source_dir_kwargs)
 
     compare = subparsers.add_parser('compare', aliases=['cmp'])
     compare.set_defaults(func=compare_repo)
+    compare.add_argument(*source_dir_args, **source_dir_kwargs)
 
     return parser
 
