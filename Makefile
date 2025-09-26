@@ -83,9 +83,7 @@ version: .tag .commit .deployed
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
 	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
-	# TODO: Verify this command behaves as expected
 	$(VENV_PYTHON) -m phtoolbox deps -i src/app/app.json -o dist/app.json $(WHEELS)
-	cat dist/app.json
 	touch $@
 
 deploy: $(PACKAGE).tar venv
