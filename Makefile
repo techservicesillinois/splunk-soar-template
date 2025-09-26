@@ -85,7 +85,6 @@ $(DIST_APP_JSON): wheels venv $(DIST_SRCS)
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $@
 	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $@
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $@
-# TODO: Verify this command behaves as expected
 	$(VENV_PYTHON) -m phtoolbox deps -i $(DIST_APP_JSON) -o $(DIST_APP_JSON) $(DIST_WHEELS)
 	touch $@
 
