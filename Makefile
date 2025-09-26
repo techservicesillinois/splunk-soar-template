@@ -83,9 +83,9 @@ version: .tag .commit .deployed
 	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	@echo "WHEELS: $(WHEELS)"
-# TODO: Add a SED command here for any custom library packaging.
-# sed $(SED_INPLACE) "s/WHEEL_TDX/$(shell ls $(WHEELS) | grep -E 'TDX.*\.whl')/" $@
-	sed $(SED_INPLACE) "s/WHEEL_TOOLBOX/$(shell ls ./$(WHEELS) | grep -E 'phantom_toolbox.*\.whl')/" $@
+	# TODO: Verify this command behaves as expected
+	$(VENV_PYTHON) -m phtoolbox deps -i src/app.json -o dist/app.json wheels
+	cat dist/app.json
 	touch $@
 
 deploy: $(PACKAGE).tar venv
