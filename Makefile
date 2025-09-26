@@ -8,18 +8,20 @@ TEST_APP_NAME:=Test $(PROD_APP_NAME)
 SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 PACKAGE:=app
-SRCS_DIR:=src/$(MODULE)
+SRCS_DIR:=src/app
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
-DIST_DIR:=dist/$(MODULE)
-DIST_SRCS:=$(addprefix $(DIST_DIR)/, $(PACKAGE).json *.py)
+DIST_APP_DIR:=dist/app/
+DIST_APP_JSON:=dist/app/app.json
+DIST_SRCS:=$(addprefix $(DIST_APP_DIR), *.py)
+DIST_LOGOS:=$(addprefix $(DIST_APP_DIR), *.png)
+DIST_WHEELS:=dist/app/wheels
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
-WHEELS:=dist/wheels
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
@@ -42,7 +44,7 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: dist $(PACKAGE).tar
+build: $(DIST_APP_DIR) wheels $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
@@ -53,15 +55,37 @@ deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
-dist: $(DIST_DIR) $(DIST_SRCS) .appjson version
-$(DIST_DIR):
-	mkdir -p $@
-$(DIST_SRCS): $(SOAR_SRCS)
-	cp -r $^ $(DIST_DIR)
+dist: $(DIST_SRCS) .appjson version
 
-$(PACKAGE).tar: version $(SOAR_SRCS) $(WHEELS) 
+dist_src:
+$(DIST_SRCS): $(SOAR_SRCS)
+	mkdir -p $(DIST_APP_DIR)
+	cp -r $^ $(DIST_APP_DIR)
+
+$(PACKAGE).tar: $(DIST_SRCS) $(DIST_LOGOS) $(DIST_WHEELS) $(DIST_APP_JSON)
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
-	tar cvf $@ -C src $(MODULE)
+	tar cvf $@ $^
+
+wheels: $(DIST_WHEELS)
+$(DIST_WHEELS): requirements.in
+	mkdir -p $@
+	pip wheel --no-deps --wheel-dir=$@ -r $^
+
+.appjson: wheels venv $(DIST_SRCS)
+$(APP_JSON):
+	cp -r app/app.json $(DIST_APP_DIR)
+	echo appid: $(APP_ID)
+	echo name:  $(APP_NAME)
+	echo wheel: $(shell ls $(WHEELS))
+	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
+	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
+	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
+	@echo "WHEELS: $(WHEELS)"
+# TODO: Verify this command behaves as expected
+	$(VENV_PYTHON) -m phtoolbox deps -i src/app.json -o dist/app/app.json wheels
+	cat dist/app/app.json
+	touch $@
+
 
 version: .tag .commit .deployed
 .tag: $(DIST_SRCS)
@@ -75,15 +99,6 @@ version: .tag .commit .deployed
 .deployed: $(DIST_SRCS)
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
-	touch $@
-.appjson: $(DIST_DIR)/$(PACKAGE).json
-	echo appid: $(APP_ID)
-	echo name:  $(APP_NAME)
-	echo wheel: $(shell ls $(WHEELS))
-	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
-	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
-	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
-	$(VENV_PYTHON) -m phtoolbox deps -i src/app/app.json -o dist/app.json $(WHEELS)
 	touch $@
 
 deploy: $(PACKAGE).tar venv
@@ -101,9 +116,6 @@ venv: requirements-test.txt .python-version
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $<
 
-wheels: $(WHEELS)
-$(WHEELS): requirements.in
-	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
