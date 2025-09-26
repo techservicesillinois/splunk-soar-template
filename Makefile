@@ -19,6 +19,7 @@ BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
+WHEELS:=dist/wheels
 
 # BSD `sed` treats the `-i` option differently than Linux and others.
 # Check for Mac OS X 'Darwin' and set our `-i` option accordingly.
@@ -84,7 +85,7 @@ version: .tag .commit .deployed
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	@echo "WHEELS: $(WHEELS)"
 	# TODO: Verify this command behaves as expected
-	$(VENV_PYTHON) -m phtoolbox deps -i src/app.json -o dist/app.json wheels
+	$(VENV_PYTHON) -m phtoolbox deps -i src/app/app.json -o dist/app.json wheels
 	cat dist/app.json
 	touch $@
 
