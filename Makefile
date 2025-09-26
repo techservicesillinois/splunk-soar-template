@@ -76,19 +76,17 @@ $(DIST_WHEELS): requirements.in
 	mkdir -p $@
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
-.appjson: wheels venv $(DIST_SRCS)
-$(DIST_APP_JSON):
-	cp -r app/app.json $(DIST_APP_DIR)
+.appjson: 
+$(DIST_APP_JSON): wheels venv $(DIST_SRCS)
+	cp -r src/app/app.json $(DIST_APP_JSON)
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
 	echo wheel: $(shell ls $(WHEELS))
-	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
-	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
-	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
-	@echo "WHEELS: $(WHEELS)"
+	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $@
+	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $@
+	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $@
 # TODO: Verify this command behaves as expected
-	$(VENV_PYTHON) -m phtoolbox deps -i src/app.json -o dist/app/app.json wheels
-	cat dist/app/app.json
+	$(VENV_PYTHON) -m phtoolbox deps -i $(DIST_APP_JSON) -o $(DIST_APP_JSON) $(DIST_WHEELS)
 	touch $@
 
 
