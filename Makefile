@@ -59,7 +59,7 @@ $(DIST_DIR):
 $(DIST_SRCS): $(SOAR_SRCS)
 	cp -r $^ $(DIST_DIR)
 
-$(PACKAGE).tar: version $(SOAR_SRCS) wheels
+$(PACKAGE).tar: version $(SOAR_SRCS) $(WHEELS) 
 	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
 	tar cvf $@ -C src $(MODULE)
 
@@ -76,16 +76,15 @@ version: .tag .commit .deployed
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
 	touch $@
-.appjson: $(DIST_DIR)/$(PACKAGE).json $(WHEELS)
+.appjson: $(DIST_DIR)/$(PACKAGE).json
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
 	echo wheel: $(shell ls $(WHEELS))
 	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
 	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
 	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
-	@echo "WHEELS: $(WHEELS)"
 	# TODO: Verify this command behaves as expected
-	$(VENV_PYTHON) -m phtoolbox deps -i src/app/app.json -o dist/app.json wheels
+	$(VENV_PYTHON) -m phtoolbox deps -i src/app/app.json -o dist/app.json $(WHEELS)
 	cat dist/app.json
 	touch $@
 
