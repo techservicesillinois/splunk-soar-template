@@ -15,7 +15,7 @@ DIST_APP_DIR:=dist/app/
 DIST_APP_JSON:=dist/app/app.json
 DIST_SRCS:=$(addprefix $(DIST_APP_DIR), *.py)
 DIST_LOGOS:=$(addprefix $(DIST_APP_DIR), *.png)
-DIST_WHEELS:=dist/app/wheels
+DIST_WHEELS:=dist/wheels
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
@@ -44,18 +44,22 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: $(DIST_APP_DIR) wheels $(PACKAGE).tar
+build: $(DIST_APP_DIR) $(DIST_WHEELS) $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: dist $(PACKAGE).tar
+build-test: $(DIST_APP_DIR) $(PACKAGE).tar
 
 
 deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
-dist: $(DIST_SRCS) .appjson version
+dist: 
+$(DIST_APP_DIR): $(DIST_SRCS) .appjson version
+
+$(DIST_LOGOS):
+	cp -r $^ $(DIST_APP_DIR)
 
 dist_src:
 $(DIST_SRCS): $(SOAR_SRCS)
