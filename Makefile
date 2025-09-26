@@ -17,6 +17,7 @@ DIST_SRCS:=$(addprefix $(DIST_APP_DIR), *.py)
 DIST_LOGOS:=$(addprefix $(DIST_APP_DIR), *.png)
 DIST_WHEELS:=dist/wheels
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
+LOGOS:=$(shell find $(SRCS_DIR) -name '*.png')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
@@ -56,9 +57,9 @@ deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
 dist: 
-$(DIST_APP_DIR): $(DIST_SRCS) .appjson version
+$(DIST_APP_DIR): $(DIST_SRCS) $(DIST_LOGOS) $(DIST_APP_JSON) version
 
-$(DIST_LOGOS):
+$(DIST_LOGOS): $(LOGOS)
 	cp -r $^ $(DIST_APP_DIR)
 
 dist_src:
@@ -76,7 +77,7 @@ $(DIST_WHEELS): requirements.in
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 .appjson: wheels venv $(DIST_SRCS)
-$(APP_JSON):
+$(DIST_APP_JSON):
 	cp -r app/app.json $(DIST_APP_DIR)
 	echo appid: $(APP_ID)
 	echo name:  $(APP_NAME)
