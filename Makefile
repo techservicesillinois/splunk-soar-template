@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build build-test clean lint static python-version
+.PHONY: all build build-test clean lint static python-version wheels
 include config.mk
 
 MODULE:=app
@@ -8,12 +8,16 @@ TEST_APP_NAME:=Test $(PROD_APP_NAME)
 SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 PACKAGE:=app
-SRCS_DIR:=src/$(MODULE)
+SRCS_DIR:=src/app
 TSCS_DIR:=tests
 SOAR_SRCS:=$(shell find $(SRCS_DIR) -type f)
-DIST_DIR:=dist/$(MODULE)
-DIST_SRCS:=$(addprefix $(DIST_DIR)/, $(PACKAGE).json *.py)
+DIST_APP_DIR:=dist/app/
+DIST_APP_JSON:=dist/app/app.json
+DIST_SRCS:=$(addprefix $(DIST_APP_DIR), *.py)
+DIST_LOGOS:=$(addprefix $(DIST_APP_DIR), *.png)
+DIST_WHEELS:=dist/wheels
 SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
+LOGOS:=$(shell find $(SRCS_DIR) -name '*.png')
 TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
@@ -41,24 +45,49 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: dist $(PACKAGE).tar
+build: $(DIST_APP_DIR) $(DIST_WHEELS) $(PACKAGE).tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: dist $(PACKAGE).tar
+build-test: $(DIST_APP_DIR) $(PACKAGE).tar
+
 
 deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
-dist: $(DIST_DIR) $(DIST_SRCS) .appjson version
-$(DIST_DIR):
-	mkdir -p $@
-$(DIST_SRCS): $(SOAR_SRCS)
-	cp -r $^ $(DIST_DIR)
+dist: 
+$(DIST_APP_DIR): $(DIST_SRCS) $(DIST_LOGOS) $(DIST_APP_JSON) version
 
-$(PACKAGE).tar: $(DIST_SRCS)
-	tar cvf $@ -C dist $(MODULE)
+$(DIST_LOGOS): $(LOGOS)
+	cp -r $^ $(DIST_APP_DIR)
+
+dist_src:
+$(DIST_SRCS): $(SOAR_SRCS)
+	mkdir -p $(DIST_APP_DIR)
+	cp -r $^ $(DIST_APP_DIR)
+
+$(PACKAGE).tar: $(DIST_SRCS) $(DIST_LOGOS) $(DIST_WHEELS) $(DIST_APP_JSON)
+	-find src -type d -name __pycache__ -exec rm -fr "{}" \;
+	tar cvf $@ $^
+
+wheels: $(DIST_WHEELS)
+$(DIST_WHEELS): requirements.in
+	mkdir -p $@
+	pip wheel --no-deps --wheel-dir=$@ -r $^
+
+.appjson: 
+$(DIST_APP_JSON): wheels venv $(DIST_SRCS)
+	cp -r src/app/app.json $(DIST_APP_JSON)
+	echo appid: $(APP_ID)
+	echo name:  $(APP_NAME)
+	echo wheel: $(shell ls $(WHEELS))
+	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $@
+	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $@
+	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $@
+	$(VENV_PYTHON) -m phtoolbox deps -i $(DIST_APP_JSON) -o $(DIST_APP_JSON) $(DIST_WHEELS)
+	touch $@
+
 
 version: .tag .commit .deployed
 .tag: $(DIST_SRCS)
@@ -72,13 +101,6 @@ version: .tag .commit .deployed
 .deployed: $(DIST_SRCS)
 	echo deployed $(BUILD_TIME)
 	sed $(SED_INPLACE) "s/BUILD_TIME/$(BUILD_TIME)/" $^
-	touch $@
-.appjson: $(DIST_DIR)/$(PACKAGE).json
-	echo appid: $(APP_ID)
-	echo name:  $(APP_NAME)
-	sed $(SED_INPLACE) "s/APP_ID/$(APP_ID)/" $^
-	sed $(SED_INPLACE) "s/APP_NAME/$(APP_NAME)/" $^
-	sed $(SED_INPLACE) "s/MODULE/$(MODULE)/" $^
 	touch $@
 
 deploy: $(PACKAGE).tar venv
@@ -95,6 +117,7 @@ venv: requirements-test.txt .python-version
 	rm -rf $@
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $<
+
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in
