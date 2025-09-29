@@ -3,22 +3,16 @@
 .PHONY: all build build-test clean lint static python-version wheels check_template
 include config.mk
 
-MODULE:=app
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
 SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
-PACKAGE:=app
-SRCS_DIR:=src/$(MODULE)
-TSCS_DIR:=tests
-DIST_DIR:=dist/$(MODULE)
-DIST_SRCS:=$(addprefix $(DIST_DIR)/, app.json app.py logo.png)
-SRCS:=$(shell find $(SRCS_DIR) -name '*.py')
-TSCS:=$(shell find $(TSCS_DIR) -name '*.py')
+DIST_SRCS:=$(addprefix dist/app/, app.json app.py logo.png)
+SRCS:=$(shell find src/app -name '*.py')
+TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
-WHEELS:=dist/app/wheels
 
 ifeq (tag, $(GITHUB_REF_TYPE))
 	TAG?=$(GITHUB_REF_NAME)
@@ -31,11 +25,11 @@ all: build
 
 build: export APP_ID=$(PROD_APP_ID)
 build: export APP_NAME=$(PROD_APP_NAME)
-build: $(PACKAGE).tar
+build: app.tar
 
 build-test: export APP_ID=$(TEST_APP_ID)
 build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: $(PACKAGE).tar
+build-test: app.tar
 
 
 deps: deps-deploy
@@ -43,21 +37,21 @@ deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
 dist: $(DIST_SRCS)
-$(DIST_DIR):
+dist/app:
 	mkdir -p $@
-$(DIST_DIR)/app.py: $(SRCS_DIR)/app.py $(DIST_DIR)
+dist/app/app.py: src/app/app.py dist/app
 	sed "s/GITHUB_TAG/$(TAG)/;s/GITHUB_SHA/$(GITHUB_SHA)/;s/BUILD_TIME/$(BUILD_TIME)/" $< > $@
-$(DIST_DIR)/logo.png: $(SRCS_DIR)/logo.png $(DIST_DIR) 
-	cp -r $< $(DIST_DIR)
-$(DIST_DIR)/app.json: $(SRCS_DIR)/app.json $(DIST_DIR) venv wheels
+dist/app/logo.png: src/app/logo.png dist/app
+	cp -r $< $@
+dist/app/app.json: src/app/app.json dist/app venv wheels
     # LC_ALL=C is needed on macOS to avoid illegal byte sequence error
-	LC_ALL=C sed "s/APP_ID/$(APP_ID)/;s/APP_NAME/$(APP_NAME)/;s/MODULE/$(MODULE)/" $< |\
-	$(VENV_PYTHON) -m phtoolbox deps -o $@ $(DIST_DIR)/wheels
+	LC_ALL=C sed "s/APP_ID/$(APP_ID)/;s/APP_NAME/$(APP_NAME)/;s/MODULE/app/" $< |\
+	$(VENV_PYTHON) -m phtoolbox deps -o $@ dist/app/wheels
 
-$(PACKAGE).tar: $(DIST_SRCS)
-	tar cvf $@ -C dist $(MODULE)
+app.tar: $(DIST_SRCS)
+	tar cvf $@ -C dist app
 
-deploy: $(PACKAGE).tar venv
+deploy: app.tar venv
 	$(VENV_PYTHON) -m phtoolbox deploy --file $<
 
 python-version:
@@ -72,8 +66,8 @@ venv: requirements-test.txt .python-version
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $<
 
-wheels: $(DIST_DIR) $(WHEELS)
-$(WHEELS): requirements.in
+wheels: dist/app dist/app/wheels
+dist/app/wheels: requirements.in
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
@@ -107,14 +101,14 @@ check_template: venv .check_template
 .check_template: Makefile soar_template .github/workflows/deploy.yml tests/test_python_version.py
 	$(VENV_PYTHON) soar_template compare
 
-test: lint static check_template unit 
+test: lint static check_template unit
 
 clean:
 	rm -rf venv $(VENV_REQS)
 	rm -rf .lint .static
 	rm -rf .mypy_cache
 	rm -rf dist
-	rm -f $(PACKAGE).tar .tag
+	rm -f app.tar
 
 force-clean: clean
 	rm -f requirements-test.txt .python-version

@@ -5,15 +5,10 @@
 *.vscode
 
 # Our Makefile
-.appjson
 .check_template
-.commit
-.check_template
-.deploy
 .lint
 .requirements.venv
 .static
-.tag
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -67,9 +62,6 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-.commit
-.tag
-.deployed
 
 # Translations
 *.mo
