@@ -13,8 +13,8 @@
     "license": "NCSA",
     "app_version": "GITHUB_TAG",
     "utctime_updated": "BUILD_TIME",
-    "package_name": "MODULE",
-    "main_module": "MODULE.py",
+    "package_name": "app",
+    "main_module": "app.py",
     "min_phantom_version": "5.3.3.92213",
     "app_wizard_version": "1.0.0",
     "configuration": {
