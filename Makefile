@@ -6,7 +6,11 @@ include config.mk
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
 SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
-DIST_SRCS:=$(addprefix dist/app/, app.json app.py logo.png)
+ifeq (src/app/readme.html, $(wildcard src/app/readme.html))
+	DIST_OPT:=readme.html
+endif
+
+DIST_SRCS:=$(addprefix dist/app/, app.json app.py logo.png $(DIST_OPT))
 SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
@@ -42,6 +46,8 @@ dist/app:
 dist/app/app.py: src/app/app.py dist/app
 	sed "s/GITHUB_TAG/$(TAG)/;s/GITHUB_SHA/$(GITHUB_SHA)/;s/BUILD_TIME/$(BUILD_TIME)/" $< > $@
 dist/app/logo.png: src/app/logo.png dist/app
+	cp -r $< $@
+dist/app/readme.html: src/app/readme.html dist/app
 	cp -r $< $@
 dist/app/app.json: src/app/app.json dist/app venv wheels
     # LC_ALL=C is needed on macOS to avoid illegal byte sequence error
