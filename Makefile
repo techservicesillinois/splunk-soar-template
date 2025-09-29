@@ -45,14 +45,12 @@ dist/app:
 	mkdir -p $@
 dist/app/app.py: src/app/app.py dist/app
 	sed "s/GITHUB_TAG/$(TAG)/;s/GITHUB_SHA/$(GITHUB_SHA)/;s/BUILD_TIME/$(BUILD_TIME)/" $< > $@
-dist/app/logo.png: src/app/logo.png dist/app
-	cp -r $< $@
-dist/app/readme.html: src/app/readme.html dist/app
-	cp -r $< $@
 dist/app/app.json: src/app/app.json dist/app venv wheels
     # LC_ALL=C is needed on macOS to avoid illegal byte sequence error
 	LC_ALL=C sed "s/APP_ID/$(APP_ID)/;s/APP_NAME/$(APP_NAME)/;s/MODULE/app/" $< |\
 	$(VENV_PYTHON) -m phtoolbox deps -o $@ dist/app/wheels
+dist/app/%: src/app/% dist/app
+	cp -r $< $@
 
 app.tar: $(DIST_SRCS)
 	tar cvf $@ -C dist app

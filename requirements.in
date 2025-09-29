@@ -1,1 +1,2 @@
 # Production dependencies are added to app.json
+git+https://github.com/techservicesillinois/phantom-toolbox.git
