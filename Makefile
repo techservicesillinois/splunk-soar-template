@@ -10,7 +10,7 @@ ifeq (src/app/readme.html, $(wildcard src/app/readme.html))
 	DIST_OPT:=readme.html
 endif
 
-DIST_SRCS:=$(addprefix dist/app/, app.json app.py logo.png $(DIST_OPT))
+DIST_SRCS:=$(addprefix dist/app/, app.json app.py app.png $(DIST_OPT))
 SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
