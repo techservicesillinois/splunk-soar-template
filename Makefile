@@ -75,10 +75,11 @@ dist/app/wheels: requirements.in
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
-requirements-test.txt: requirements-test.in
+requirements-test.txt: requirements-test.in requirements.in
 	rm -rf $(VENV_REQS)
 	python -m venv $(VENV_REQS)
-	$(VENV_REQS)/bin/python -m pip install -r $^
+	$(VENV_REQS)/bin/python -m pip install -r requirements.in
+	$(VENV_REQS)/bin/python -m pip install -r requirements-test.in
 	$(VENV_REQS)/bin/python -m pip freeze -qqq | \
 	sed "s;^pytest-splunk-soar-connectors==.*;$(PYTEST_SOAR_REPO);" >  $@
 # REMOVE sed line above once pytest-splunk-soar-connectors is on pypi
