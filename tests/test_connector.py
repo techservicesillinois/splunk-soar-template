@@ -1,27 +1,27 @@
 import json
 
-from phtoolbox.app.base_connector import NiceBaseConnector
+from app import AppConnector
 
 APP_ID = "tacosalad"
 
 
-def test_connectivity(cassette, connector: NiceBaseConnector):
+def test_connectivity(cassette, connector: AppConnector):
     in_json = {
             "appid": APP_ID,
             "identifier": "test_connectivity",
             "parameters": [{}],
     }
 
-    result = json.loads(connector.nice_handle_action(json.dumps(in_json)))
+    result = json.loads(connector._handle_action(json.dumps(in_json), None))
     assert result[0]["message"] == "Active connection"
 
 
-def test_failed_connectivity(cassette, connector: NiceBaseConnector):
+def test_failed_connectivity(cassette, connector: AppConnector):
     in_json = {
             "appid": APP_ID,
             "identifier": "test_connectivity",
             "parameters": [{}],
     }
 
-    result = json.loads(connector.nice_handle_action(json.dumps(in_json)))
+    result = json.loads(connector._handle_action(json.dumps(in_json), None))
     assert result[0]["message"] == "Failed connection"
