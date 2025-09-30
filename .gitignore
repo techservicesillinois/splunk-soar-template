@@ -6,6 +6,7 @@
 *.vscode
 
 # Our Makefile
+.autopep8
 .check_template
 .lint
 .requirements.venv

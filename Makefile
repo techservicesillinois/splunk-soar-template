@@ -1,6 +1,6 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
-.PHONY: all build build-test clean lint static python-version wheels check_template
+.PHONY: all autopep8 build build-test clean lint static python-version wheels check_template
 include config.mk
 
 TEST_APP_NAME:=Test $(PROD_APP_NAME)
@@ -100,8 +100,10 @@ static: venv .static
 unit: venv
 	$(VENV_PYTHON) -m pytest
 
-autopep8: $(SRCS) $(TSCS) soar_template
+autopep8: .autopep8
+.autopep8: $(SRCS) $(TSCS) soar_template
 	autopep8 --in-place $?
+	touch $@
 
 check_template: venv .check_template
 .check_template: Makefile soar_template .github/workflows/deploy.yml tests/test_python_version.py
