@@ -20,7 +20,6 @@ __build_time__ = 'BUILD_TIME'
 
 class AppConnector(BaseConnector, NiceBaseConnector):
 
-
     @handle('test_connectivity', 'test_robots_txt')
     def _handle_test_connectivity(self, param):
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -63,7 +62,7 @@ class AppConnector(BaseConnector, NiceBaseConnector):
 
         return ret
 
-    ## Boilterplate functions follow. Do not modify below.
+    # Boilterplate functions follow. Do not modify below.
 
     def __init__(self):
         '''Ensures call to `__init__` in BaseConnector and NiceBaseConnector
@@ -75,15 +74,12 @@ class AppConnector(BaseConnector, NiceBaseConnector):
         NiceBaseConnector.__init__(
             self, phantom.APP_SUCCESS, phantom.APP_ERROR)
 
-
     def handle_action(self, param):
         '''Calls the appropriate handler on NiceBaseConnector.
 
         This function is not typically modified, but must be present.
-        Use the `@handle` decorator from `phantom-toolbox' 
+        Use the `@handle` decorator from `phantom-toolbox'
         to route handlers to actions.
         '''
         # handle_action is an abstract method; it MUST be implemented here.
         self.nice_handle_action(param)
-
-

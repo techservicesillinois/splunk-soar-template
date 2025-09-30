@@ -105,10 +105,10 @@ def init_parser():
     )
 
     parser.add_argument(
-            "-s",
-            "--source-dir",
-            type=directory,
-            help="Local directory instead of remote git repository")
+        "-s",
+        "--source-dir",
+        type=directory,
+        help="Local directory instead of remote git repository")
 
     subparsers = parser.add_subparsers()
 
