@@ -7,6 +7,7 @@
 # Phantom App imports
 import phantom.app as phantom
 from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 
 import requests
 
@@ -17,7 +18,7 @@ __git_hash__ = 'GITHUB_SHA'
 __build_time__ = 'BUILD_TIME'
 
 
-class AppConnector(NiceBaseConnector):
+class AppConnector(BaseConnector, NiceBaseConnector):
 
     @handle('test_connectivity', 'test_robots_txt')
     def _handle_test_connectivity(self, param):
@@ -60,3 +61,25 @@ class AppConnector(NiceBaseConnector):
         self._username = config['username']
 
         return ret
+
+    # Boilterplate functions follow. Do not modify below.
+
+    def __init__(self):
+        '''Ensures call to `__init__` in BaseConnector and NiceBaseConnector
+
+        This function is not typically modified, but must be present.
+        '''
+        BaseConnector.__init__(self)
+        # It acts like BaseConnector does not call super().__init__()
+        NiceBaseConnector.__init__(
+            self, phantom.APP_SUCCESS, phantom.APP_ERROR)
+
+    def handle_action(self, param):
+        '''Calls the appropriate handler on NiceBaseConnector.
+
+        This function is not typically modified, but must be present.
+        Use the `@handle` decorator from `phantom-toolbox'
+        to route handlers to actions.
+        '''
+        # handle_action is an abstract method; it MUST be implemented here.
+        self.nice_handle_action(param)

@@ -30,12 +30,15 @@ TMPDIR = tempfile.TemporaryDirectory(prefix='soar.template')
 
 # These FILES should never differ from the template!
 FILES = [
-    'Makefile',
-    'soar_template',
     '.github/workflows/deploy.yml',
-    'tests/test_python_version.py',
+    '.gitignore',
+    'CODE_OF_CONDUCT.md',
+    'Makefile',
+    'mypy.ini',
+    'pyproject.toml',
     'SECURITY.md',
-    'CODE_OF_CONDUCT.md'
+    'soar_template',
+    'tests/test_python_version.py',
 ]
 
 TMP_FILES = {}
@@ -102,10 +105,10 @@ def init_parser():
     )
 
     parser.add_argument(
-            "-s",
-            "--source-dir",
-            type=directory,
-            help="Local directory instead of remote git repository")
+        "-s",
+        "--source-dir",
+        type=directory,
+        help="Local directory instead of remote git repository")
 
     subparsers = parser.add_subparsers()
 

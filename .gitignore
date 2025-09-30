@@ -1,3 +1,4 @@
+# DO NOT EDIT - Update techservicesillinois/splunk-soar-template first
 # SOAR
 *.ini
 *.tar
@@ -5,14 +6,11 @@
 *.vscode
 
 # Our Makefile
-.appjson
+.autopep8
 .check_template
-.commit
-.deploy
 .lint
 .requirements.venv
 .static
-.tag
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -66,9 +64,6 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-.commit
-.tag
-.deployed
 
 # Translations
 *.mo

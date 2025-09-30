@@ -1,7 +1,6 @@
 # Built into SOAR
 beautifulsoup4
-# Production dependencies (Pulled from soar_null_router.json)
-bhr-client
+# Production dependencies should be added to requirements.in
 # Testing dependencies
 flake8
 mypy
