@@ -63,6 +63,18 @@ class AppConnector(BaseConnector, NiceBaseConnector):
 
         return ret
 
+    ## Boilterplate functions follow. Do not modify below.
+
+    def __init__(self):
+        '''Ensures call to `__init__` in BaseConnector and NiceBaseConnector
+
+        This function is not typically modified, but must be present.
+        '''
+        BaseConnector.__init__(self)
+        # It acts like BaseConnector does not call super().__init__()
+        NiceBaseConnector.__init__(
+            self, phantom.APP_SUCCESS, phantom.APP_ERROR)
+
 
     def handle_action(self, param):
         '''Calls the appropriate handler on NiceBaseConnector.
