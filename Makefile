@@ -89,6 +89,7 @@ lint: venv .lint
 	$(VENV_PYTHON) -m flake8 $?
 	touch $@
 
+
 static: venv .static
 .static: $(SRCS) $(TSCS)
 	echo "Code: $(SRCS)"
@@ -99,8 +100,8 @@ static: venv .static
 unit: venv
 	$(VENV_PYTHON) -m pytest
 
-autopep8:
-	autopep8 --in-place $(SRCS)
+autopep8: $(SRCS) $(TSCS) soar_template
+	autopep8 --in-place $?
 
 check_template: venv .check_template
 .check_template: Makefile soar_template .github/workflows/deploy.yml tests/test_python_version.py
