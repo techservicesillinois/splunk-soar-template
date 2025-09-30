@@ -18,7 +18,7 @@ import sys
 import tempfile
 
 from os import makedirs
-from os.path import join, dirname
+from os.path import basename, dirname, join, splitext
 from urllib.parse import urljoin
 
 import requests
@@ -98,6 +98,11 @@ def directory(path):
     return path
 
 
+class MakeDependencyFile(argparse.FileType):
+    def __call__(self, path):
+        return super().__call__(path + ".d")
+
+
 def init_parser():
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -110,6 +115,14 @@ def init_parser():
         type=directory,
         help="Local directory instead of remote git repository")
 
+    parser.add_argument(
+            "-m",
+            "--make-target",
+            metavar="TARGET",
+            type=MakeDependencyFile('w'),
+            help="Writes a Makefile dependency TARGET.d file: "
+                 "TARGET.d will configure the TARGET to depend on "
+                 "the files checked by soar_template compare.")
     subparsers = parser.add_subparsers()
 
     update = subparsers.add_parser('update', aliases=['up'])
@@ -128,6 +141,10 @@ def main():
     if '.git' not in os.listdir(os.curdir):
         print("soar_template must run from repository root.")
         exit(1)
+
+    if args.target:
+        target = splitext(basename(args.target.name))[0]
+        print(f"{target}: {' '.join(FILES)}", file=args.target)
 
     for path in FILES:
         if args.source_dir:
