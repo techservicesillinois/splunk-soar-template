@@ -40,9 +40,9 @@ jobs:
     - name: Virtual Env
       run: |
         make venv
-    - name: Tests
+    - name: Unit Tests
       run: |
-        make test
+        make unit
     - name: Linter
       run: |
         make lint
@@ -57,6 +57,9 @@ jobs:
       if: github.event.repository.name == 'splunk-soar-template'
       run: |
         touch .check_template
+    - name: Tests
+      run: |
+        make test
     - name: Build Package (Prod)
       if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
       run: |
