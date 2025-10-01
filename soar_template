@@ -142,9 +142,9 @@ def main():
         print("soar_template must run from repository root.")
         exit(1)
 
-    if args.target:
-        target = splitext(basename(args.target.name))[0]
-        print(f"{target}: {' '.join(FILES)}", file=args.target)
+    if args.make_target:
+        target = splitext(basename(args.make_target.name))[0]
+        print(f"{target}: {' '.join(FILES)}", file=args.make_target)
 
     for path in FILES:
         if args.source_dir:
