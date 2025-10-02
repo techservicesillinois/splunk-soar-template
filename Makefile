@@ -56,7 +56,7 @@ app.tar: $(DIST_SRCS)
 	tar cvf $@ -C dist app
 
 deploy: app.tar venv
-	$(VENV_PYTHON) -m phtoolbox deploy --file $<
+	$(VENV_PYTHON) -m phtoolbox deploy $<
 
 python-version:
 	@echo $(SOAR_PYTHON_VERSION)
