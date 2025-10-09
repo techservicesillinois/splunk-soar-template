@@ -48,7 +48,7 @@ dist/app/app.py: src/app/app.py dist/app
 dist/app/app.json: src/app/app.json dist/app venv wheels
     # LC_ALL=C is needed on macOS to avoid illegal byte sequence error
 	LC_ALL=C sed "s/APP_ID/$(APP_ID)/;s/APP_NAME/$(APP_NAME)/;s/GITHUB_TAG/$(TAG)/;s/BUILD_TIME/$(BUILD_TIME)/" $< |\
-	$(VENV_PYTHON) -m phtoolbox deps -o $@ dist/app/wheels
+	$(VENV_PYTHON) -m phtoolbox deps -o $@ -C dist/app wheels
 dist/app/%: src/app/% dist/app
 	cp -r $< $@
 
