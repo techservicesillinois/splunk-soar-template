@@ -1,5 +1,9 @@
 # DO NOT EDIT - All project-specific values belong in config.mk!
 
+# NOTE: From the GNU Make manual: A phony target should not be a
+# prerequisite of a real target file; if it is, its recipe will be
+# run every time make considers that file.
+# https://www.gnu.org/software/make/manual/make.html#Phony-Targets
 .PHONY: all autopep8 build build-test clean lint static python-version wheels check_template
 include config.mk
 
@@ -41,11 +45,36 @@ deps-deploy: # Install deps for deploy.py on Github
 	pip install requests
 
 dist: $(DIST_SRCS)
+# NOTE: Make uses modification time (mtime) to determine if a target
+# should be rebuilt. For a file this simply means whenever the contents
+# are changed the mtime is updated. For a directory the mtime is
+# updated whenever files or subdirectories are added, removed, or
+# renamed within it.
+#
+# dist/app is a dependency for all the files that reside within it.
+# This is necessary to ensure the directory is created before we add
+# files.  Unfortunately, this has the side effect that the timestamp
+# for dist/app is always ahead of the timestamps of its contents
+# because each time a file is created dist/app's mtime is updated by
+# the operating system.  Therefore, on subsequent runs Make will
+# ALWAYS rebuild every file residing within dist/app.
+#
+# To avoid these unnecessary rebuilds we can use order-only prerequisites.
+# An order-only prerequisite NEVER causes a target to rebuild, the
+# prerequisite will be built if it does not exist but when updated
+# will NOT cause a rebuild of the target.  This is exactly the behavior
+# we want in this case. The directory dist/app must exist before
+# building a file, but changes to dist/app's mtime do not warrant a
+# rebuild of one of dist/app's files. To specify a list of order-only
+# prerequisites simply add a pipe | before them and after any normal
+# prerequisites like so:
+#
+# targets : normal-prerequisites | order-only-prerequisites
 dist/app:
 	mkdir -p $@
-dist/app/app.py: src/app/app.py dist/app
+dist/app/app.py: src/app/app.py | dist/app
 	sed "s/GITHUB_TAG/$(TAG)/;s/GITHUB_SHA/$(GITHUB_SHA)/;s/BUILD_TIME/$(BUILD_TIME)/" $< > $@
-dist/app/app.json: src/app/app.json dist/app venv wheels
+dist/app/app.json: src/app/app.json venv dist/app/wheels | dist/app
     # LC_ALL=C is needed on macOS to avoid illegal byte sequence error
 	LC_ALL=C sed "s/APP_ID/$(APP_ID)/;s/APP_NAME/$(APP_NAME)/;s/GITHUB_TAG/$(TAG)/;s/BUILD_TIME/$(BUILD_TIME)/" $< |\
 	$(VENV_PYTHON) -m phtoolbox deps -o $@ -C dist/app wheels
@@ -70,7 +99,7 @@ venv: requirements-test.txt .python-version
 	python -m venv venv
 	$(VENV_PYTHON) -m pip install -r $<
 
-wheels: dist/app dist/app/wheels
+wheels: dist/app/wheels
 dist/app/wheels: requirements.in
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
