@@ -5,9 +5,13 @@
 # run every time make considers that file.
 # https://www.gnu.org/software/make/manual/make.html#Phony-Targets
 .PHONY: all autopep8 build build-test clean lint static python-version wheels check_template
-include config.mk
 
-TEST_APP_NAME:=Test $(PROD_APP_NAME)
+ifdef SOAR_TEST_APP
+    include config-test.mk
+else
+    include config.mk
+endif
+
 SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 ifeq (src/app/readme.html, $(wildcard src/app/readme.html))
@@ -31,14 +35,7 @@ GITHUB_SHA?=$(shell git rev-parse HEAD)
 
 all: build
 
-build: export APP_ID=$(PROD_APP_ID)
-build: export APP_NAME=$(PROD_APP_NAME)
 build: app.tar
-
-build-test: export APP_ID=$(TEST_APP_ID)
-build-test: export APP_NAME=$(TEST_APP_NAME)
-build-test: app.tar
-
 
 deps: deps-deploy
 deps-deploy: # Install deps for deploy.py on Github
