@@ -64,17 +64,24 @@ jobs:
     - name: Build Package (Test)
       if: github.event_name == 'pull_request'
       run: |
-        make build-test
+        make build SOAR_TEST_APP=1
+    - name: Post to Splunk SOAR API (Prod)
+      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      run: |
+        make deploy
+      env:
+        SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
+        SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
+    - name: Post to Splunk SOAR API (Test)
+      if: github.event_name == 'pull_request'
+      run: |
+        make deploy SOAR_TEST_APP=1
+      env:
+        SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
+        SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
     - name: Store build as an artifact
       uses: actions/upload-artifact@v4
       with:
         name: deployed tar file
         path: app.tar
         retention-days: 90
-    - name: Post to Splunk SOAR API
-      if: (github.event_name == 'release' || github.event_name == 'pull_request') && github.event.repository.name != 'splunk-soar-template'
-      run: |
-        make deploy
-      env:
-        SOAR_TOKEN: ${{ secrets.SOAR_TOKEN }}
-        SOAR_HOSTNAME: ${{ secrets.SOAR_HOSTNAME }}
