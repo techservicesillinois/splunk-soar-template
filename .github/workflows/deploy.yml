@@ -40,6 +40,9 @@ jobs:
     - name: Virtual Env
       run: |
         make venv
+    - name: Unit Tests
+      run: |
+        make unit
     - name: Linter
       run: |
         make lint
