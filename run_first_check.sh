@@ -24,5 +24,8 @@ done
 if [ -f ".github/workflows/run_first_check.yml" ]; then
     echo Remove run_first_check.yml
 fi
+if [ -f ".github/workflows/template_only_tests.yml" ]; then
+    echo Remove template_only_tests.yml
+fi
 echo Remove run_first_check.sh
 exit 1

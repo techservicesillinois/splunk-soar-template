@@ -1,0 +1,32 @@
+# REMOVE THIS FILE! This should only live in the template repo!
+# This file is for running tests that only make sense in the template!
+name: Template Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set Python version file
+      run: |
+        make python-version >> .python-version
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version-file: '.python-version' # Read version from a file
+    - name: Install deps
+      run: |
+        make deps
+    - name: Virtual Env
+      run: |
+        make venv
+    - name: Ensure .getattributes is up-to-date
+      run: |
+        make .gitattributes
+        git diff --exit-code .gitattributes
