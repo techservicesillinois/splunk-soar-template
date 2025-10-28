@@ -93,6 +93,17 @@ def update_repo(args):
     sys.exit(0)
 
 
+def generate(args):
+    msg = "# Ignore files managed by soar_template in Github PR reviews\n"
+    with open(args.FILE, "w") as file:
+        if args.FILE == '.gitattributes':
+            file.write(msg)
+            if len(FILES) > 0:
+                file.write(' linguist-generated\n'.join(FILES))
+                file.write(' linguist-generated\n')
+                file.write('requirements*.txt linguist-generated\n')
+
+
 def directory(path):
     if not os.path.isdir(path):
         raise argparse.ArgumentTypeError(f"{path}: not a valid directory.")
@@ -131,6 +142,11 @@ def init_parser():
 
     compare = subparsers.add_parser('compare', aliases=['cmp'])
     compare.set_defaults(func=compare_repo)
+
+    gen = subparsers.add_parser('generate', aliases=['gen'])
+    gen.add_argument('FILE', choices=('.gitattributes', ),
+                     help='Build certain template files')
+    gen.set_defaults(func=generate)
 
     return parser
 

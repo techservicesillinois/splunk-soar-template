@@ -91,6 +91,9 @@ python-version:
 	pyenv install -s $(SOAR_PYTHON_VERSION)
 	pyenv local $(SOAR_PYTHON_VERSION)
 
+.gitattributes: soar_template
+	./soar_template gen $@
+
 venv: requirements-test.txt .python-version
 	rm -rf $@
 	python -m venv venv
