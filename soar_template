@@ -30,13 +30,14 @@ TMPDIR = tempfile.TemporaryDirectory(prefix='soar.template')
 
 # These FILES should never differ from the template!
 FILES = [
+    '.gitattributes',
     '.github/workflows/deploy.yml',
     '.gitignore',
     'CODE_OF_CONDUCT.md',
     'Makefile',
+    'SECURITY.md',
     'mypy.ini',
     'pyproject.toml',
-    'SECURITY.md',
     'soar_template',
     'tests/test_python_version.py',
 ]
