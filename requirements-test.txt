@@ -1,24 +1,24 @@
 attrs==25.4.0
 beautifulsoup4==4.14.2
 certifi==2025.10.5
-charset-normalizer==3.4.3
-Deprecated==1.2.18
+charset-normalizer==3.4.4
+Deprecated==1.3.1
 docutils==0.22.2
 entry-points-txt==0.2.1
 flake8==7.3.0
 headerparser==0.5.2
-idna==3.10
-iniconfig==2.1.0
+idna==3.11
+iniconfig==2.3.0
 markdown-it-py==4.0.0
 mccabe==0.7.0
 mdurl==0.1.2
 multidict==6.7.0
 mypy==1.18.2
 mypy_extensions==1.1.0
-nh3==0.3.1
+nh3==0.3.2
 packaging==25.0
 pathspec==0.12.1
-phantom-toolbox @ git+https://github.com/techservicesillinois/phantom-toolbox.git@a4301793e49ac0b70731146e3ce51867630dccb2
+phantom-toolbox @ git+https://github.com/techservicesillinois/phantom-toolbox.git@0c7c8e8f29f095f91a3246904663554c5d26854d
 pluggy==1.6.0
 propcache==0.4.1
 pycodestyle==2.14.0
@@ -34,7 +34,7 @@ rich==14.2.0
 soupsieve==2.8
 types-beautifulsoup4==4.12.0.20250516
 types-cryptography==3.3.23.2
-types-html5lib==1.1.11.20250917
+types-html5lib==1.1.11.20251014
 types-jwt==0.1.3
 types-requests==2.31.0.6
 types-urllib3==1.26.25.14
@@ -45,5 +45,5 @@ vcrpy==7.0.0
 wheel==0.45.1
 wheel-filename==1.4.2
 wheel-inspect==1.7.2
-wrapt==1.17.3
+wrapt==2.0.0
 yarl==1.22.0
