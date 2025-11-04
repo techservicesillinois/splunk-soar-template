@@ -104,7 +104,7 @@ dist/app/wheels: requirements.in
 	pip wheel --no-deps --wheel-dir=$@ -r $^
 
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
-requirements-test.txt: requirements-test.in requirements.in
+requirements-test.txt: requirements-test.in requirements.in .python-version
 	rm -rf $(VENV_REQS)
 	python -m venv $(VENV_REQS)
 	$(VENV_REQS)/bin/python -m pip install -r requirements.in
