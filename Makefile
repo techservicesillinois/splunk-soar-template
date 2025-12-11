@@ -144,6 +144,7 @@ check_template: venv .check_template
 check_template_contents:
 	@ ! grep -l PROD_ config.mk || echo "config.mk should not contain PROD_"
 	@ ! grep -l TEST_ config-test.mk || echo config-test.mk should not contain TEST_
+	@ grep -q -l '^APP_NAME:=Test ' config-test.mk || echo APP_NAME in config-test.mk should start 'Test '
 
 
 test: lint static check_template unit
