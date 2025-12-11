@@ -149,7 +149,6 @@ check_template_contents:
 	@ python -c "import json, sys; d=json.load(open('src/app/app.json')); sys.exit(0) if d.get('python_version') == '3.13' else print('app.json: python_version must be set to 3.13.') or sys.exit(1)"
 	@ ! grep -ql '"pip[0-9]*_dependencies"' src/app/app.json || echo "app.json should not contain pip dependencies. phantom_toolbox will manage dependencies."
 
-
 test: lint static check_template unit
 
 clean:
