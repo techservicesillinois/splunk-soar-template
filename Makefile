@@ -141,6 +141,11 @@ check_template: venv .check_template
 	$(VENV_PYTHON) soar_template -m $@ compare
 	touch $@
 
+check_template_contents:
+	@ ! grep -l PROD_ config.mk || echo "config.mk should not contain PROD_"
+	@ ! grep -l TEST_ config-test.mk || echo config-test.mk should not contain TEST_
+
+
 test: lint static check_template unit
 
 clean:
