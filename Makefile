@@ -88,8 +88,8 @@ python-version:
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
-	pyenv install -s $(SOAR_PYTHON_VERSION)
-	pyenv local $(SOAR_PYTHON_VERSION)
+	uv python install $(SOAR_PYTHON_VERSION)
+	uv python pin $(SOAR_PYTHON_VERSION)
 
 .gitattributes: soar_template
 	./soar_template gen $@
