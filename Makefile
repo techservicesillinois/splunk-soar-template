@@ -23,6 +23,7 @@ SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=venv/bin/python
+BORG:=venv/bin/borg
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
 
@@ -88,8 +89,8 @@ python-version:
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
-	pyenv install -s $(SOAR_PYTHON_VERSION)
-	pyenv local $(SOAR_PYTHON_VERSION)
+	uv python install $(SOAR_PYTHON_VERSION)
+	uv python pin $(SOAR_PYTHON_VERSION)
 
 .gitattributes: soar_template
 	./soar_template gen $@
@@ -138,7 +139,7 @@ autopep8: .autopep8
 -include .check_template.d
 check_template: venv .check_template check_template_contents
 .check_template:
-	$(VENV_PYTHON) soar_template -m $@ compare
+	$(BORG) compare
 	touch $@
 
 check_template_contents:
