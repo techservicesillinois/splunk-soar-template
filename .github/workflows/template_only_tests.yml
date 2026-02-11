@@ -26,7 +26,7 @@ jobs:
     - name: Virtual Env
       run: |
         make venv
-    - name: Ensure .getattributes is up-to-date
+    - name: Ensure .gitattributes is up-to-date
       run: |
         make .gitattributes
         git diff --exit-code .gitattributes
