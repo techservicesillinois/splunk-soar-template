@@ -1,4 +1,3 @@
-<!-- DO NOT EDIT - Update techservicesillinois/splunk-soar-template first -->
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
