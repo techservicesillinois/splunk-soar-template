@@ -135,6 +135,9 @@ autopep8: .autopep8
 	autopep8 --in-place $?
 	touch $@
 
+.check_template.d:
+	$(BORG) gen $@
+
 -include .check_template.d
 check_template: venv .check_template check_template_contents
 .check_template:
@@ -161,3 +164,4 @@ clean:
 
 force-clean: clean
 	rm -f requirements-test.txt .python-version
+	rm .check_template.d
