@@ -1,0 +1,20 @@
+# This file configures `borg` when this repository is used as a source.
+# This file should only be present in a template repository.
+
+# If this file is present in a child repository, it should be deleted.
+
+[template]
+files = [
+    '.gitattributes',
+    ".github/workflows/cleanup.yml",
+    '.github/workflows/deploy.yml',
+    ".github/workflows/pr_reminder.yml",
+    '.gitignore',
+    'CODE_OF_CONDUCT.md',
+    'Makefile',
+    'SECURITY.md',
+    'mypy.ini',
+    'pyproject.toml',
+    'soar_template',
+    'tests/test_python_version.py',
+]
