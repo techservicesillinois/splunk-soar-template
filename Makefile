@@ -92,8 +92,8 @@ python-version:
 	uv python install $(SOAR_PYTHON_VERSION)
 	uv python pin $(SOAR_PYTHON_VERSION)
 
-.gitattributes: soar_template
-	./soar_template gen $@
+.gitattributes: venv
+	$(BORG)	gen $@
 
 venv: requirements-test.txt .python-version
 	rm -rf $@
@@ -115,7 +115,7 @@ requirements-test.txt: requirements-test.in requirements.in .python-version
 # REMOVE sed line above once pytest-splunk-soar-connectors is on pypi
 
 lint: venv .lint
-.lint: $(SRCS) $(TSCS) soar_template
+.lint: $(SRCS) $(TSCS)
 	$(VENV_PYTHON) -m flake8 $?
 	touch $@
 
@@ -131,7 +131,7 @@ unit: venv
 	$(VENV_PYTHON) -m pytest
 
 autopep8: .autopep8
-.autopep8: $(SRCS) $(TSCS) soar_template
+.autopep8: $(SRCS) $(TSCS)
 	autopep8 --in-place $?
 	touch $@
 
@@ -139,7 +139,7 @@ autopep8: .autopep8
 -include .check_template.d
 check_template: venv .check_template check_template_contents
 .check_template:
-	$(BORG) compare
+	$(BORG) compare --make-target $@
 	touch $@
 
 check_template_contents:
@@ -162,3 +162,4 @@ clean:
 
 force-clean: clean
 	rm -f requirements-test.txt .python-version
+	rm .check_template.d
