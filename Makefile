@@ -97,8 +97,8 @@ python-version:
 
 .venv: requirements-test.txt .python-version
 	rm -rf $@
-	python -m venv .venv
-	$(VENV_PYTHON) -m pip install -r $<
+	uv venv
+	uv pip install -r $<
 
 wheels: dist/app/wheels
 dist/app/wheels: requirements.in
