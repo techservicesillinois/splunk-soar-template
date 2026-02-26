@@ -95,6 +95,7 @@ python-version:
 .gitattributes: .venv
 	$(BORG)	gen $@
 
+venv: .venv
 .venv: requirements-test.txt .python-version
 	rm -rf $@
 	uv venv
