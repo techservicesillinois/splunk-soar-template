@@ -39,7 +39,7 @@ jobs:
         make deps
     - name: Virtual Env
       run: |
-        make venv
+        make .venv
     - name: Linter
       run: |
         make lint
