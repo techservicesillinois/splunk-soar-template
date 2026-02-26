@@ -5,14 +5,15 @@
 
 [template]
 files = [
-    '.gitattributes',
+		# secdev-template-repository is authoritative for these
     ".github/workflows/cleanup.yml",
-    '.github/workflows/deploy.yml',
     ".github/workflows/pr_reminder.yml",
-    '.gitignore',
     'CODE_OF_CONDUCT.md',
-    'Makefile',
     'SECURITY.md',
+		# splunk-soar-template is authoritative for these
+    '.github/workflows/deploy.yml',
+    '.gitignore',
+    'Makefile',
     'mypy.ini',
     'pyproject.toml',
     'tests/test_python_version.py',
