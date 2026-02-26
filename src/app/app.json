@@ -60,6 +60,7 @@
             "identifier": "test_robots_txt",
             "description": "Validate the presence of a robots.txt file.",
             "verbose": "",
+            "type": "generic",
             "read_only": true,
             "parameters": {},
             "output": [],
