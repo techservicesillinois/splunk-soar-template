@@ -1,0 +1,20 @@
+# This file configures `borg` when this repository is used as a source.
+# This file should only be present in a template repository.
+
+# If this file is present in a child repository, it should be deleted.
+
+[template]
+files = [
+		# secdev-template-repository is authoritative for these
+    ".github/workflows/cleanup.yml",
+    ".github/workflows/pr_reminder.yml",
+    'CODE_OF_CONDUCT.md',
+    'SECURITY.md',
+		# splunk-soar-template is authoritative for these
+    '.github/workflows/deploy.yml',
+    '.gitignore',
+    'Makefile',
+    'mypy.ini',
+    'pyproject.toml',
+    'tests/test_python_version.py',
+]

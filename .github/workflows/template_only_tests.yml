@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
     - name: Set Python version file
       run: |
         make python-version >> .python-version
@@ -26,7 +28,7 @@ jobs:
     - name: Virtual Env
       run: |
         make venv
-    - name: Ensure .getattributes is up-to-date
+    - name: Ensure .gitattributes is up-to-date
       run: |
         make .gitattributes
         git diff --exit-code .gitattributes
