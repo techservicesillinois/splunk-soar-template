@@ -18,3 +18,12 @@ files = [
     'pyproject.toml',
     'tests/test_python_version.py',
 ]
+
+[generate.gitattributes]
+files = [
+    # All machine generated files
+    ".gitattributes",
+    "requiements*.txt",
+]
+# Include all template files above
+include_template_files = true
