@@ -61,7 +61,7 @@ jobs:
       run: |
         make test
     - name: Build Package (Prod)
-      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      if: github.event_name == 'release'
       run: |
         make build
     - name: Build Package (Test)
@@ -69,7 +69,7 @@ jobs:
       run: |
         make build SOAR_TEST_APP=1
     - name: Post to Splunk SOAR API (Prod)
-      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      if: github.event_name == 'release'
       run: |
         make deploy
       env:
