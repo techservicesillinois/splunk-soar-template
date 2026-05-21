@@ -4,12 +4,12 @@ This document aims to outline the requirements for the various forms of contribu
 
 All contributions are subject to review via pull request.
 
-## Working from the template repository.
+## Working from the template repository
 
 > Remove this section from this document once these steps are completed.
 
 - Replace all instances of APP_NAME in files
-- Review the [application metadata][14] (app.json) 
+- Review the [application metadata][14] (app.json)
   - add/remove configuration settings
   - add/remove actions
 - add `SOAR_HOSTNAME` and `SOAR_TOKEN` to GitHub secrets for deployment
@@ -20,7 +20,7 @@ All contributions are subject to review via pull request.
 
 ## Development Setup
 
-### Setup PyEnv 
+### Setup PyEnv
 
 1. [Install PyEnv](https://github.com/pyenv/pyenv#basic-github-checkout)
 
@@ -47,16 +47,17 @@ make test
 ## To record a new test cassette
 
 Export the following variables
+
 ```sh
 export APP_USERNAME="FAKE_USERNAME"
-export APP_PASSWORD="FAKE_PASSWORD"
+export APP_PASSWORD="FAKE_PASSWORD" # pragma: allowlist secret
 export APP_ENDPOINT="cybersecurity.illinois.edu/robots.txt"
 export VCR_RECORD=1
 ```
 
 ## Deployment
 
-In GitHub, under 
+In GitHub, under
 `Secrets` then `Actions` add the following `Repository Secrets`:
 
 `SOAR_HOSTNAME` set to `automate-illinois.soar.splunkcloud.com`
@@ -66,9 +67,11 @@ In GitHub, under
 
 To emit a log into the SOAR debug logs, use `self.debug_print`:
 
-    `self.debug_print("git_hash", __git_hash__)`
+```python
+self.debug_print("git_hash", __git_hash__)`
+```
 
-To read SOAR app DEBUG logs, visit SOAR `Administration` in the main drop-down, and look under `System Health` and then `Debugging`. 
+To read SOAR app DEBUG logs, visit SOAR `Administration` in the main drop-down, and look under `System Health` and then `Debugging`.
 
 > Tip: You must have specific permissions assigned to your account to access this area.
 
