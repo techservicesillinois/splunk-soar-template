@@ -23,7 +23,7 @@ SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=.venv/bin/python
-BORG:=.venv/bin/borg --config-url https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/.splunk.soar.borg.toml
+BORG:=.venv/bin/borg --config-url https://raw.githubusercontent.com/techservicesillinois/template_repo_sync/refs/heads/main/example_configs/splunk.soar.borg.toml
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
 
