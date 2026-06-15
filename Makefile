@@ -23,7 +23,7 @@ SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=.venv/bin/python
-BORG:=.venv/bin/borg
+BORG:=.venv/bin/borg -u .splunk.soar.borg.toml
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
 

@@ -1,9 +1,7 @@
-# This file configures `borg` when this repository is used as a source.
-# This file should only be present in a template repository.
-
-# If this file is present in a child repository, it should be deleted.
+# This file configures `borg` with patterns fit for a Splunk SOAR application
 
 [template]
+files_url = "https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/"
 files = [
 		# secdev-template-repository is authoritative for these
     ".github/workflows/cleanup.yml",

@@ -1,3 +1,0 @@
-[source]
-url = 'https://raw.githubusercontent.com/techservicesillinois/secdev-template-repository/refs/heads/main/'
-# Additional configuration will be loaded from `<url>/.borg.template.toml`
