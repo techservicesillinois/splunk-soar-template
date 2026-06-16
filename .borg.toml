@@ -1,3 +1,27 @@
-[source]
-url = 'https://raw.githubusercontent.com/techservicesillinois/secdev-template-repository/refs/heads/main/'
-# Additional configuration will be loaded from `<url>/.borg.template.toml`
+# This file configures `borg` with patterns fit for a Splunk SOAR application
+
+[template]
+files_url = "https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/"
+files = [
+		# secdev-template-repository is authoritative for these
+    ".github/workflows/cleanup.yml",
+    ".github/workflows/pr_reminder.yml",
+    'CODE_OF_CONDUCT.md',
+    'SECURITY.md',
+		# splunk-soar-template is authoritative for these
+    '.github/workflows/deploy.yml',
+    '.gitignore',
+    'Makefile',
+    'mypy.ini',
+    'pyproject.toml',
+    'tests/test_python_version.py',
+]
+
+[generate.gitattributes]
+files = [
+    # All machine generated files
+    ".gitattributes",
+    "requirements*.txt",
+]
+# Include all template files above
+include_template_files = true
