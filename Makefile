@@ -98,7 +98,7 @@ python-version:
 venv: .venv
 .venv: requirements-test.txt .python-version
 	rm -rf $@
-	python -m venv venv
+	python -m venv .venv
 	$(VENV_PYTHON) -m pip install -r $<
 
 
