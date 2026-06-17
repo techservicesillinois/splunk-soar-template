@@ -23,7 +23,7 @@ SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=.venv/bin/python
-BORG:=.venv/bin/borg
+BORG:=.venv/bin/borg -u https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/.borg.toml
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
 
@@ -89,8 +89,8 @@ python-version:
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
-	uv python install $(SOAR_PYTHON_VERSION)
-	uv python pin $(SOAR_PYTHON_VERSION)
+	pyenv install -s $(SOAR_PYTHON_VERSION)
+	pyenv local $(SOAR_PYTHON_VERSION)
 
 .gitattributes: .venv
 	$(BORG)	gen $@
@@ -98,8 +98,9 @@ python-version:
 venv: .venv
 .venv: requirements-test.txt .python-version
 	rm -rf $@
-	uv venv
-	uv pip install -r $<
+	python -m venv venv
+	$(VENV_PYTHON) -m pip install -r $<
+
 
 wheels: dist/app/wheels
 dist/app/wheels: requirements.in
@@ -108,7 +109,7 @@ dist/app/wheels: requirements.in
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in requirements.in .python-version
 	rm -rf $(VENV_REQS)
-	$(shell uv python find) -m venv $(VENV_REQS)
+	python -m venv $(VENV_REQS)
 	$(VENV_REQS)/bin/python -m pip install -r requirements.in
 	$(VENV_REQS)/bin/python -m pip install -r requirements-test.in
 	$(VENV_REQS)/bin/python -m pip freeze -qqq | \
