@@ -85,9 +85,9 @@ app.tar: $(DIST_SRCS)
 deploy: app.tar .venv
 	$(VENV_PYTHON) -m phtoolbox deploy $<
 
+# This is used by .github/deploy.yaml to echo into .python-version
+# Because .python-version is handled directl yby GitHub Actions
 python-version:
-	# This is used by .github/deploy.yaml to echo into .python-version
-	# Because .python-version is handled directl yby GitHub Actions
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
