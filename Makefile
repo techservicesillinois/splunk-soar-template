@@ -85,6 +85,7 @@ app.tar: $(DIST_SRCS)
 deploy: app.tar .venv
 	$(VENV_PYTHON) -m phtoolbox deploy $<
 
+python-version: .python-version
 .python-version: tests/test_python_version.py
 	./util/python-version.sh $(SOAR_PYTHON_VERSION)
 
