@@ -93,7 +93,7 @@ python-version:
 	pyenv local $(SOAR_PYTHON_VERSION)
 
 check_python_version:
-	python -m pytest -k test_python_version
+	$(VENV_PYTHON) -m pytest -k test_python_version
 
 .gitattributes: .venv
 	$(BORG)	gen $@
