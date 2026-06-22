@@ -89,8 +89,7 @@ python-version:
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
-	pyenv install -s $(SOAR_PYTHON_VERSION)
-	pyenv local $(SOAR_PYTHON_VERSION)
+	./python-version.sh $(SOAR_PYTHON_VERSION)
 
 check_python_version:
 	$(VENV_PYTHON) -m pytest -k test_python_version
