@@ -6,17 +6,14 @@
 # uv may use any python versions from pyenv if installed, but it can also install versions itself.
 if command -v uv >/dev/null 2>&1
 then
-	echo "Using uv to create .python-version"
-	uv python install $1 && uv python pin $1
+	$(uv python find) -m venv $1
 	exit 0
 fi
 
 # Use `pyenv` if available
 if command -v pyenv >/dev/null 2>&1
 then
-	echo "Using pyenv to create .python-version"
-	pyenv install -s $1
-	pyenv local $1
+	python3 -m venv $1
 	exit 0
 fi
 

@@ -2,21 +2,22 @@
 # Install the desired Python version with `pyenv` or `uv`
 # Pass in the desired Python version as $1 (i.e. 3.13)
 
+rm -rf .venv
+
 # Use `uv`, if available
 # uv may use any python versions from pyenv if installed, but it can also install versions itself.
 if command -v uv >/dev/null 2>&1
 then
-	echo "Using uv to create .python-version"
-	uv python install $1 && uv python pin $1
+	uv venv
+	uv pip install -r requirements-test.txt
 	exit 0
 fi
 
 # Use `pyenv` if available
 if command -v pyenv >/dev/null 2>&1
 then
-	echo "Using pyenv to create .python-version"
-	pyenv install -s $1
-	pyenv local $1
+	python3 -m venv .venv
+	.venv/bin/python -m pip install -r requirements-test.txt
 	exit 0
 fi
 
