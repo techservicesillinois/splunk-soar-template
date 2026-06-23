@@ -38,20 +38,20 @@ In the meantime, you can `source ~/.bash_profile`.
 
 ### Run the test suite
 
+```sh
+make test
+```
+
+> Tip: `make .python-version` will attempt to set your Python version, as long as either `pyenv` or `uv` is available on your PATH
+
+## To record a new test cassette
+
 Export the following variables
 ```sh
 export APP_USERNAME="FAKE_USERNAME"
 export APP_PASSWORD="FAKE_PASSWORD"
 export APP_ENDPOINT="cybersecurity.illinois.edu/robots.txt"
 export VCR_RECORD=1
-```
-
-```sh
-pyenv install 3.9.13
-pyenv local 3.9.13
-make venv
-source venv/bin/activate
-make test
 ```
 
 ## Deployment

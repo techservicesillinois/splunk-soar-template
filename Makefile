@@ -12,7 +12,7 @@ else
     include config.mk
 endif
 
-SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
+SOAR_PYTHON_VERSION:=$(shell PYTHONPATH=tests python3 -c 'from test_python_version import SOAR_PYTHON_VERSION as V; print(f"{V[0]}.{V[1]}")')
 
 ifeq (src/app/readme.html, $(wildcard src/app/readme.html))
 	DIST_OPT:=readme.html
@@ -23,7 +23,7 @@ SRCS:=$(shell find src/app -name '*.py')
 TSCS:=$(shell find tests -name '*.py')
 BUILD_TIME:=$(shell date -u +%FT%X.%6NZ)
 VENV_PYTHON:=.venv/bin/python
-BORG:=.venv/bin/borg
+BORG:=.venv/bin/borg -u https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/.borg.toml
 VENV_REQS:=.requirements.venv
 UNAME:=$(shell uname -s)
 
@@ -85,21 +85,24 @@ app.tar: $(DIST_SRCS)
 deploy: app.tar .venv
 	$(VENV_PYTHON) -m phtoolbox deploy $<
 
+# This is used by .github/deploy.yaml to echo into .python-version
+# Because .python-version is handled directl yby GitHub Actions
 python-version:
 	@echo $(SOAR_PYTHON_VERSION)
 
 .python-version: tests/test_python_version.py
-	uv python install $(SOAR_PYTHON_VERSION)
-	uv python pin $(SOAR_PYTHON_VERSION)
+	./util/python-version.sh $(SOAR_PYTHON_VERSION)
+
+check_python_version:
+	$(VENV_PYTHON) -m pytest -k test_python_version
 
 .gitattributes: .venv
 	$(BORG)	gen $@
 
 venv: .venv
 .venv: requirements-test.txt .python-version
-	rm -rf $@
-	uv venv
-	uv pip install -r $<
+	./util/venv.sh
+
 
 wheels: dist/app/wheels
 dist/app/wheels: requirements.in
@@ -108,7 +111,7 @@ dist/app/wheels: requirements.in
 requirements-test.txt: export PYTEST_SOAR_REPO=git+https://github.com/splunk/pytest-splunk-soar-connectors.git
 requirements-test.txt: requirements-test.in requirements.in .python-version
 	rm -rf $(VENV_REQS)
-	$(shell uv python find) -m venv $(VENV_REQS)
+	./util/requirements-txt.sh $(VENV_REQS)
 	$(VENV_REQS)/bin/python -m pip install -r requirements.in
 	$(VENV_REQS)/bin/python -m pip install -r requirements-test.in
 	$(VENV_REQS)/bin/python -m pip freeze -qqq | \
@@ -148,7 +151,7 @@ check_template_contents:
 	@ ! grep -l TEST_ config-test.mk || echo config-test.mk should not contain TEST_
 	@ grep -ql '^APP_NAME:=Test ' config-test.mk || echo APP_NAME in config-test.mk should start 'Test '
 	@ ! grep -ql MODULE src/app/app.json || echo "app.json should not contain MODULE. Change MODULE to app."
-	@ python -c "import json, sys; d=json.load(open('src/app/app.json')); sys.exit(0) if d.get('python_version') == '3.13' else print('app.json: python_version must be set to 3.13.') or sys.exit(1)"
+	@ python3 -c "import json, sys; d=json.load(open('src/app/app.json')); sys.exit(0) if d.get('python_version') == '3.13' else print('app.json: python_version must be set to 3.13.') or sys.exit(1)"
 	@ ! grep -ql '"pip[0-9]*_dependencies"' src/app/app.json || echo "app.json should not contain pip dependencies. phantom_toolbox will manage dependencies."
 	@ (grep -c '"type": "test"' src/app/app.json | grep -q 1) || echo "app.json should not contain multiple test actions"
 
