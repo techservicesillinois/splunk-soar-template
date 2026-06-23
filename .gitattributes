@@ -11,3 +11,6 @@ Makefile linguist-generated
 mypy.ini linguist-generated
 pyproject.toml linguist-generated
 tests/test_python_version.py linguist-generated
+util/python-version.sh linguist-generated
+util/requirements-txt.sh linguist-generated
+util/venv.sh linguist-generated

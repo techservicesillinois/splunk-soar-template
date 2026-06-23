@@ -4,24 +4,28 @@
 files_url = "https://raw.githubusercontent.com/techservicesillinois/splunk-soar-template/refs/heads/main/"
 files = [
 		# secdev-template-repository is authoritative for these
-    ".github/workflows/cleanup.yml",
-    ".github/workflows/pr_reminder.yml",
-    'CODE_OF_CONDUCT.md',
-    'SECURITY.md',
+		".github/workflows/cleanup.yml",
+		".github/workflows/pr_reminder.yml",
+		'CODE_OF_CONDUCT.md',
+		'SECURITY.md',
 		# splunk-soar-template is authoritative for these
-    '.github/workflows/deploy.yml',
-    '.gitignore',
-    'Makefile',
-    'mypy.ini',
-    'pyproject.toml',
-    'tests/test_python_version.py',
+		'.github/workflows/deploy.yml',
+		'.gitignore',
+		'Makefile',
+		'mypy.ini',
+		'pyproject.toml',
+		'tests/test_python_version.py',
+		# Util scripts used by Makefile
+		'util/python-version.sh',
+		'util/requirements-txt.sh',
+		'util/venv.sh',
 ]
 
 [generate.gitattributes]
 files = [
-    # All machine generated files
-    ".gitattributes",
-    "requirements*.txt",
+		# All machine generated files
+		".gitattributes",
+		"requirements*.txt",
 ]
 # Include all template files above
 include_template_files = true
