@@ -15,6 +15,10 @@ files = [
     'mypy.ini',
     'pyproject.toml',
     'tests/test_python_version.py',
+		# Util scripts used by Makefile
+		'util/python-version.sh',
+		'util/requirements-txt.sh',
+		'util/venv.sh',
 ]
 
 [generate.gitattributes]
