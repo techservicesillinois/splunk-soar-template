@@ -2,8 +2,8 @@
 .gitattributes linguist-generated
 requirements*.txt linguist-generated
 .github/workflows/cleanup.yml linguist-generated
-.github/workflows/pr_reminder.yml linguist-generated
 .github/workflows/detect-secrets.yml linguist-generated
+.github/workflows/pr_reminder.yml linguist-generated
 .pre-commit-config.yaml linguist-generated
 CODE_OF_CONDUCT.md linguist-generated
 SECURITY.md linguist-generated
