@@ -5,7 +5,9 @@ files_url = "https://raw.githubusercontent.com/techservicesillinois/splunk-soar-
 files = [
 		# secdev-template-repository is authoritative for these
 		".github/workflows/cleanup.yml",
+		".github/workflows/detect-secrets.yml",
 		".github/workflows/pr_reminder.yml",
+		'.pre-commit-config.yaml',
 		'CODE_OF_CONDUCT.md',
 		'SECURITY.md',
 		# splunk-soar-template is authoritative for these

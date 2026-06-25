@@ -11,7 +11,7 @@ from vcr_cleaner import CleanYAMLSerializer
 pytest_plugins = ("splunk-soar-connectors")
 
 CASSETTE_USERNAME = "FAKE_USERNAME"
-CASSETTE_PASSWORD = "FAKE_PASSWORD"
+CASSETTE_PASSWORD = "FAKE_PASSWORD"  # pragma: allowlist secret
 CASSETTE_ENDPOINT = "cybersecurity.illinois.edu/robots.txt"
 
 # To record, `export VCR_RECORD=True`
