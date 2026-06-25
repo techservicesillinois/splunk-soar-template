@@ -81,3 +81,16 @@ SOAR logs are in the phantom folders, nested pretty deep.
 Deployment logs are in `app_install`.
 
 > For SOAR app logs, you may need to check multiple files, based on which broker your code ran on.
+
+## Regenerating .gitattributes
+
+Because this is a template repository, running `make .gitattributes` may fail due to any local changes to `.borg.toml` - because the changes have not yet been merged to `main` in this repository / in the authoritative template.
+
+The work-around for this is to use `--source-dir` to point `borg` at the current working directory `.`, when calling `borg` to regenerate `.gitattirbutes`.
+
+This command will work to regenerated `.gitattributes` even if the `.borg.toml` in the current branch has changed and not been merged into `main`, yet.
+
+```sh
+borg -s . gen .gitattributes
+```
+
